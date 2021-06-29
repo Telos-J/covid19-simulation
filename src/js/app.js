@@ -3,3 +3,5 @@ import '../image.png'
 import '../icon-192.png'
 import '../icon-512.png'
 import '../css/style.scss'
+
+// This is an important comment
