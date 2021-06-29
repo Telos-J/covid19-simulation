@@ -7,5 +7,9 @@ import '../css/style.scss'
 const canvas = document('canvas')
 const context = canvas.getContext('2d')
 
-context.fillRect(0, 0, 20, 20)
-
+draw() {
+    context.fillStyle = this.color
+    context.beginPath()
+    context.arc(this.x, this.y, this.r, 0, Math.PI * 2)
+    context.fill()
+  }
