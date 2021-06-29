@@ -4,11 +4,13 @@ import '../icon-192.png'
 import '../icon-512.png'
 import '../css/style.scss'
 
-const canvas = document('canvas')
+const canvas = document.querySelector('canvas')
 const context = canvas.getContext('2d')
 
+//making a ball 
 
-
+canvas.width = 1600
+canvas.height = 900
 
 class Ball {
     constructor() {
@@ -24,4 +26,7 @@ class Ball {
         context.fill() 
     }
 }
+const ball = new Ball()
+      ball.draw()
+    
 
