@@ -1,2 +1,2 @@
-# nodejs-webpack-boilderplate
-My custom node.js boilerplate using webpack as a bundler
+# Covid19 Vaccination Simulation - no node.js
+Analyzing the effect of vaccination and herd immunity
