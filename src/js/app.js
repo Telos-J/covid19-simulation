@@ -7,9 +7,13 @@ import '../css/style.scss'
 const canvas = document('canvas')
 const context = canvas.getContext('2d')
 
-draw() {
-    context.fillStyle = this.color
-    context.beginPath()
-    context.arc(this.x, this.y, this.r, 0, Math.PI * 2)
-    context.fill()
-  }
+class Ball {
+    constructor() {
+        this.r = Math.random() * 20 + 20
+        this.x = Math.random() * 
+    (canvas.width - 2 * r) + r
+        this.y = Math.random() * 
+    (canvas.height - 2 * r) + r
+        this.speed = Math.random() * 5 + 5
+    }
+}
