@@ -4,4 +4,4 @@ import '../icon-192.png'
 import '../icon-512.png'
 import '../css/style.scss'
 
-//comment
+// This is an important comment
