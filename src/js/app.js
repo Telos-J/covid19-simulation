@@ -49,3 +49,11 @@ for (const ball of balls) {
       ball.move()
     }
   }
+
+  function loop() {
+    update()
+    render()
+    requestAnimationFrame(loop)
+  }
+  
+  loop()
