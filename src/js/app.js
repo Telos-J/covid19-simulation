@@ -11,16 +11,29 @@ canvas.height = 900
 
 class Ball {
     constructor() {
-             this.r = Math.random() * 20 + 20
-             this.x = Math.random() * (canvas.width - 2 * this.r) + this.r
-             this.y = Math.random() * (canvas.height - 2 * this.r) + this.r
-        }
-        drawCircle() {
-            context.fillStyle = 'blue'
-            context.beginPath()
-            context.arc(this.x, this.y, this.r, 0, Math.PI * 2)
-            context.fill()
-        }
+        this.r = Math.random() * 20 + 20
+        this.x = Math.random() * (canvas.width - 2 * this.r) + this.r
+        this.y = Math.random() * (canvas.height - 2 * this.r) + this.r
+    }
+
+    move() {
+        this.x += this.vx
+        this.y += this.vy
+        if (this.x < this.r || this.x > canvas.width - r) 
+            this.vx *= -1
+        if (this.y < this.r || this.y > canvas.height - r) 
+            this.vy *= -1
+    }
+
+    drawCircle() {
+        context.fillStyle = `rgb(0, 
+            ${Math.random() * 255},
+            ${Math.random() * 255})`
+          this.color = this.originalColor
+        context.beginPath()
+        context.arc(this.x, this.y, this.r, 0, Math.PI * 2)
+        context.fill()
+    }
 }
 
 const ball = new Ball()
@@ -32,7 +45,24 @@ for (let i=0; i<numBalls; i++) {
     balls.push(new Ball())
 }
 
-for (const ball of balls) {
+function update() {
+    for (const ball of balls) {
+      ball.move()
+    }
+  }
+
+function render() {
+    for (const ball of balls) {
     ball.drawCircle()
+    }
 }
+
+function loop() {
+    update()
+    render()
+    requestAnimationFrame(loop)
+  }
+  
+  loop()
+
 
