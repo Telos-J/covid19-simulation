@@ -46,3 +46,8 @@ for (let i=0; i<numBalls; i++) {
 for (const ball of balls) {
     ball.draw()
   }
+  function update() {
+    for (const ball of balls) {
+      ball.move()
+    }
+  }
