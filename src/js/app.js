@@ -19,6 +19,14 @@ class Ball {
         this.y = Math.random() * (canvas.height - 2 * this.r) + this.r
         this.speed = Math.random() * 5 + 5
     }
+    move() {
+        this.x += this.vx
+        this.y += this.vy
+        if (this.x < this.r || this.x > canvas.width - r) 
+          this.vx *= -1
+        if (this.y < this.r || this.y > canvas.height - r) 
+          this.vy *= -1
+      }
     draw() {
         context.fillStyle = this.color
         context.beginPath()
