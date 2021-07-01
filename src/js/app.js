@@ -41,6 +41,6 @@ const ball = new Ball()
       }
     }
     
-    let r = 20, numBalls = 10, balls = []
+    let r = 30, numBalls = 5, balls = []
     
 
