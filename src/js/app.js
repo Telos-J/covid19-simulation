@@ -29,9 +29,3 @@ class Ball {
 const ball = new Ball()
 ball.draw()
 
-function update() {
-    for (const ball of balls) {
-      ball.move()
-      ball.collide()
-    }
-  }
