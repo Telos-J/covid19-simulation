@@ -29,3 +29,8 @@ class Ball {
 const ball = new Ball()
 ball.draw()
 
+let r = 20, numBalls = 10, balls = []
+
+for (let i=0; i<numBalls; i++) {
+    balls.push(new Ball())
+  }
