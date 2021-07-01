@@ -49,7 +49,7 @@ draw() {
 collide() {
     this.color=this.originalColor
     for (const ball of balls){
-        const d=Math.hypot(this.x-ball, this.y-ball.y)
+        const d=Math.hypot(this.x-ball.x, this.y-ball.y)
         if (this !==ball && d<this.r+ball.r) {
             this.color='purple'
             break
