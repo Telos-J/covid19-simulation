@@ -49,6 +49,9 @@ for (const ball of balls) {
       ball.move()
     }
   }
+const rotation = Math.random() * Math.PI * 2
+    this.vx = this.speed * Math.cos(rotation)
+    this.vy = this.speed * Math.sin(rotation)
 
   function loop() {
     update()
