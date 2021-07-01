@@ -29,7 +29,7 @@ class Ball {
           this.vx *= -1
         if (this.y < this.r || this.y > canvas.height - r) 
           this.vy *= -1
-      }
+    }
     draw() {
         context.fillStyle = this.color
         context.beginPath()
@@ -39,10 +39,10 @@ class Ball {
     collision() {
         this.color = this.originalColor
         for (const ball of balls) {
-          const d = Math.hypot(this.x - ball.x, this.y - ball.y)
-          if (this !== ball && d < this.r + ball.r) {
-            this.color = 'cyan'
-            break
+        const d = Math.hypot(this.x - ball.x, this.y - ball.y)
+        if (this !== ball && d < this.r + ball.r) {
+        this.color = 'cyan'
+        break
           }
         }
     }
@@ -58,20 +58,20 @@ for (let i=0; i<numBalls; i++) {
 
   function update() {
     for (const ball of balls) {
-      ball.move()
-      ball.collision()
+    ball.move()
+    ball.collision()
     }
-  }
+}
   function render() {
     context.clearRect(0, 0, canvas.width, canvas.height)
-    for (const ball of balls) {
-        ball.draw()
+    for(const ball of balls) {
+    ball.draw()
       }  
-  }
+}
   function loop() {
     update()
     render()
     requestAnimationFrame(loop)
-  }
+}
   
   loop()
