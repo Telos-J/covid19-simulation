@@ -7,8 +7,6 @@ import '../css/style.scss'
 const canvas = document.querySelector('canvas')
 const context = canvas.getContext('2d')
 
-//making a ball 
-
 canvas.width = 1600
 canvas.height = 900
 
