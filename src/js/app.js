@@ -12,24 +12,20 @@ canvas.height = 900
 class Ball {
     constructor() {
         
-        const r = Math.random() * 20 + 20
-        const x = Math.random() * (canvas.width - 2 * r) + r
-        const y = Math.random() * (canvas.height - 2 * r) + r
-        
-        context.fillStyle = 'blue'
-        
-        function drawCircle(x, y) {
+            const r = Math.random() * 20 + 20
+            const x = Math.random() * (canvas.width - 2 * r) + r
+            const y = Math.random() * (canvas.height - 2 * r) + r
+        }
+        drawCircle() {
+            context.fillStyle = 'blue'
             context.beginPath()
             context.arc(x, y, r, 0, Math.PI * 2)
             context.fill()
         }
-        
-        drawCircle(x, y)
-    }
 }
 
 const ball = new Ball()
-ball.draw 
+ball.drawCircle() 
 
 let r = 20, numBalls = 10, balls = []
 
@@ -37,11 +33,7 @@ for (let i=0; i<numBalls; i++) {
     balls.push(new Ball())
 }
 
-function render() {
-    context.clearRect(0, 0, canvas.width, canvas.height)
-    for (const ball of balls) {
-      ball.draw()
-    }
-  }
-
+for (const ball of balls) {
+    ball.drawCircle()
+}
 
