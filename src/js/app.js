@@ -16,7 +16,6 @@ class Ball {
         this.x = Math.random() * (canvas.width - 2 * this.r) + this.r
         this.y = Math.random() * (canvas.height - 2 * this.r) + this.r
         this.speed = Math.random() * 5 + 5
-        
         const rotation = Math.random() * Math.PI * 2
         this.vx = this.speed * Math.cos(rotation)
         this.vy = this.speed * Math.sin(rotation)
@@ -46,15 +45,17 @@ for (let i=0; i<numBalls; i++) {
     balls.push(new Ball())
 } 
 
-for (const ball of balls) {
-    ball.draw()
-  }
   function update() {
     for (const ball of balls) {
       ball.move()
     }
   }
-
+  function render() {
+    context.clearRect(0, 0, canvas.width, canvas.height)
+    for (const ball of balls) {
+        ball.draw()
+      }  
+  }
   function loop() {
     update()
     render()
