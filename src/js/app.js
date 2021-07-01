@@ -21,19 +21,33 @@ class Ball {
         this.x = Math.random() * (canvas.width - 2 * this.r) + this.r
         this.y = Math.random() * (canvas.height - 2 * this.r) + this.r
         this.speed = Math.random() * 5 + 5
+        const rotation = Math.random() * Math.PI * 2
+        this.vx = this.speed * Math.cos(rotation)
+        this.vy = this.speed * Math.sin(rotation)
     }
 
-    draw() {
-        context.fillStyle = this.color
-        context.beginPath()
-        context.arc(this.x, this.y, this.r, 0, Math.PI * 2)
-        context.fill()
-    }
+   
+move() {
+    this.x += this.vx
+    this.y += this.vy
+    if (this.x < this.r || this.x > canvas.width - r)
+        this.vx *= -1
+    if (this.y < this.r || this.y > canvas.height - r)
+        this.vy *= -1
+}
+
+draw() {
+    context.fillStyle = this.color
+    context.beginPath()
+    context.arc(this.x, this.y, this.r, 0, Math.PI * 2)
+    context.fill()
+}
 }
 const ball = new Ball()
     ball.draw()
 
 let r = 30, numBalls = 20, balls = []
+
 for (let i=0; i<numBalls; i++) {
     balls.push(new Ball())
 }
@@ -41,3 +55,24 @@ for (let i=0; i<numBalls; i++) {
 for (const ball of balls) {
     ball.draw()
 }
+
+function update() {
+    for (const ball of balls) {
+        ball.move()
+    }
+}
+
+function render() {
+    context.clearRect(0, 0, canvas.width, canvas.height)
+    for (const ball of balls) {
+        ball.draw()
+    }
+  }
+  
+function loop() {
+    update()
+    render()
+    requestAnimationFrame(loop)
+  }
+
+  loop()
