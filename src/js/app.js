@@ -32,3 +32,12 @@ class Ball {
 }
 const ball = new Ball()
     ball.draw()
+
+let r = 30, numBalls = 20, balls = []
+for (let i=0; i<numBalls; i++) {
+    balls.push(new Ball())
+}
+
+for (const ball of balls) {
+    ball.draw()
+}
