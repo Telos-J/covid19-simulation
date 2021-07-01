@@ -9,6 +9,9 @@ import '../css/style.scss'
 
 const canvas= document.querySelector('canvas')
 const context= canvas.getContext('2d')
+canvas.width = 1600
+canvas.height = 900
+
 
 class Ball{
     constructor(){
@@ -29,6 +32,14 @@ class Ball{
 const ball=new Ball()
 ball.draw()
 
+let numBalls=20
+const ballsArray=[]
 
+for (let i=0; i< numBalls; i++){
+    ballsArray.push(ball)
+    }
+}
 
-
+for (const ball of ballsArray){
+    ball.draw()
+}
