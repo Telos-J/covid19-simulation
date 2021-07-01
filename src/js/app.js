@@ -15,17 +15,23 @@ canvas.height = 900
 
 class Ball{
     constructor(){
-        this.r=Math.random()*40+40
+        this.r=Math.random()*20+20
         this.x=Math.random()*(canvas.width-2*this.r)
         this.y=Math.random()*(canvas.height-2*this.r)+this.r
-        this.vx=Math.random()*5
-        this.vy=Math.random()
+        this.speed=Math.random()*5+5
+        const rotation=Math.random()*Math.PI*2
+        this.vx=this.speed*Math.cos(rotation)
+        this.vy=this.speed*Math.sin(rotation)
         this.color='blue'
     }
 
     move(){
         this.x+=this.vx
         this.y+=this.vy
+        if (this.x<this.r||this.x>canvas.width-r)
+            this.vx*=-1
+        if (this,y<this.r||this.y>canvas.height-r)
+            this.vy*=-1
     }
 
     draw() {
