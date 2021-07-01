@@ -22,7 +22,8 @@ class Ball{
         const rotation=Math.random()*Math.PI*2
         this.vx=this.speed*Math.cos(rotation)
         this.vy=this.speed*Math.sin(rotation)
-        this.color='blue'
+        this.originalColor=`rgb(244,194,194)`
+        this.color=this.originalColor
     }
 
     move(){
@@ -39,8 +40,18 @@ class Ball{
         context.beginPath()
         context.arc(this.x, this.y, this.r, 0, Math.PI * 2)
         context.fill()
-      }
+      } 
     
+    collide() {
+        this.color=this.originalColor
+        for (const ball of ballsArray){
+            const d=Math.hypot (this.x-ball.x,this.y-ball.y)
+            if (this !==ball && d<this.r+ball.r) {
+                this.color='purple'
+                break
+            }
+        }
+    }
 }
 
 const ball=new Ball()
@@ -60,6 +71,7 @@ for (const ball of ballsArray){
 function update(){
     for (const ball of ballsArray){
         ball.move()
+        ball.collide()
     }
 }
 function render() {
