@@ -18,7 +18,14 @@ class Ball{
         this.r=Math.random()*40+40
         this.x=Math.random()*(canvas.width-2*this.r)
         this.y=Math.random()*(canvas.height-2*this.r)+this.r
+        this.vx=Math.random()*5
+        this.vy=Math.random()
         this.color='blue'
+    }
+
+    move(){
+        this.x+=this.vx
+        this.y+=this.vy
     }
 
     draw() {
@@ -43,3 +50,22 @@ for (let i=0; i< numBalls; i++){
 for (const ball of ballsArray){
     ball.draw()
 }
+
+function update(){
+    for (const ball of ballsArray){
+        ball.move()
+    }
+}
+function render() {
+    context.clearRect(0,0,canvas.width,canvas.height)
+    for(const ball of ballsArray){
+        ball.draw()
+    }
+}
+
+function loop(){
+    update()
+    render()
+    requestAnimationFrame(loop)
+}
+loop()
