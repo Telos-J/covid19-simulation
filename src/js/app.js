@@ -28,9 +28,9 @@ class Ball{
     move(){
         this.x+=this.vx
         this.y+=this.vy
-        if (this.x<this.r||this.x>canvas.width-r)
+        if (this.x<this.r||this.x>canvas.width-this.r)
             this.vx*=-1
-        if (this,y<this.r||this.y>canvas.height-r)
+        if (this.y<this.r||this.y>canvas.height-this.r)
             this.vy*=-1
     }
 
