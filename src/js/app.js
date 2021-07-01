@@ -50,7 +50,7 @@ class Ball {
 const ball = new Ball()
 ball.draw()
 
-let r = 30, numBalls = 30, balls = []
+let r = 10, numBalls = 100, balls = []
 
 for (let i=0; i<numBalls; i++) {
     balls.push(new Ball())
