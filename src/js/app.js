@@ -18,6 +18,7 @@ class Ball{
         this.r=Math.random()*40+40
         this.x=Math.random()*(canvas.width-2*this.r)
         this.y=Math.random()*(canvas.height-2*this.r)+this.r
+        this.color='blue'
     }
 
     draw() {
@@ -36,9 +37,8 @@ let numBalls=20
 const ballsArray=[]
 
 for (let i=0; i< numBalls; i++){
-    ballsArray.push(ball)
+    ballsArray.push(new Ball())
     }
-}
 
 for (const ball of ballsArray){
     ball.draw()
