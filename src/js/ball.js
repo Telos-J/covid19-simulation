@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js'
 import {app} from './app'
 
-class Ball {
+class Ball extends PIXI.Sprite {
     constructor() {
         super()
         this.r = Math.random() * 20 + 20
