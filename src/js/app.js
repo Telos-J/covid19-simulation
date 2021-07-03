@@ -80,3 +80,5 @@ function loop() {
     requestAnimationFrame(loop)
 }
 loop()
+
+export {canvas,context}
