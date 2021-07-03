@@ -4,7 +4,7 @@ import '../icon-192.png'
 import '../icon-512.png'
 import '../css/style.scss'
 import * as PIXI from 'pixi.js'
-import { balls } from './ball'
+import { balls, setupBalls } from './ball'
 import { Renderer } from 'pixi.js'
 
 
@@ -18,11 +18,15 @@ let app = new PIXI.Application({
     resolution: devicePixelRatio || 1
 });
 
+PIXI.Loader.shared.load(setupBalls)
 
 app.ticker.add(loop)
 
 function loop(deltaTime){
-    ball.move()
+    for (const ball of balls.children){
+        ball.move()
+        ball.collide()
+    }
 }
 
 export{app}
