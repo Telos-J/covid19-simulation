@@ -4,13 +4,11 @@ import '../icon-192.png'
 import '../icon-512.png'
 import '../css/style.scss'
 import * as PIXI from 'pixi.js'
+import { balls } from './ball'
 import { Renderer } from 'pixi.js'
 
 
 const canvas = document.querySelector('canvas')
-
-const type=PIXI.utils.isWebGLSupported() ? 'WebGL':'canvas'
-PIXI.utils.sayHello(type)
 
 let app = new PIXI.Application({
     view: canvas,
@@ -20,43 +18,11 @@ let app = new PIXI.Application({
     resolution: devicePixelRatio || 1
 });
 
-let balls=new PIXI.Container()
-app.stage.addChild(balls)
 
-const ball=new PIXI.Sprite()
+app.ticker.add(loop)
 
-const graphic=new PIXI.Graphics()
-graphic.beginFill()
-graphic.arc(0,0,50,Math.PI)
-graphic.endFill()
-
-ball.texture=app.renderer.generateTexture(graphic)
-balls.addChild(ball)
-
-app.ticker.add(gameLoop)
-
-function gameLoop(deltaTime){
-    ball.x+=5*deltaTime
+function loop(deltaTime){
+    ball.move()
 }
 
-function update() {
-    for (const ball of ballsArray) {
-        ball.move()
-        ball.collide()
-    }
-}
-
-function render() {
-    context.clearRect(0, 0, canvas.width, canvas.height)
-    for (const ball of ballsArray) {
-        ball.draw()
-    }
-}
-
-function loop() {
-    update()
-    render()
-    requestAnimationFrame(loop)
-}
-
-// loop()
+export{app}
