@@ -3,7 +3,7 @@ import '../image.png'
 import '../icon-192.png'
 import '../icon-512.png'
 import '../css/style.scss'
-import { balls } from './ball'
+import { balls, setupBalls } from './ball'
 import * as PIXI from 'pixi.js'
 
 const type = PIXI.utils.isWebGLSupported() ? 'WebGL' : 'canvas'
@@ -19,11 +19,13 @@ let app = new PIXI.Application({
     resolution: devicePixelRatio || 1
 });
 
+PIXI.Loader.shared.load(setupBalls)
 app.ticker.add(loop)
 
 function loop(deltaTime) {
     for (const ball of balls.children) {
         ball.move()
+        ball.collide()
     }
 }
 
