@@ -57,7 +57,7 @@ class Ball{
 const ball = new Ball()
 ball.draw()
 
-let numBalls = 500
+let numBalls = 20
 const ballsArray = []
 
 for (let i=0; i < numBalls; i++) {
