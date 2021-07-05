@@ -77,16 +77,17 @@ class Ball extends PIXI.Sprite {
     bounce(ball) {
         const n1 = normalize(sub(this.position, ball.position))
         const n2 = normalize(sub(ball.position, this.position))
+        const m = scale(add(this.position, ball.position), 0.5)
         const velocity = this.velocity
         const speed = this.speed
 
         this.velocity = ball.velocity
         this.speed = ball.speed
-        this.position = add(this.position, scale(n1, this.speed))
+        this.position = add(m, scale(n1, this.r))
 
         ball.velocity = velocity
         ball.speed = speed
-        ball.position = add(ball.position, scale(n2, ball.speed))
+        ball.position = add(m, scale(n2, ball.r))
     }
 
     contage(ball) {
