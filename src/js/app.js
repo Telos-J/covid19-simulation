@@ -8,6 +8,7 @@ import * as PIXI from 'pixi.js'
 import * as Stats from 'stats.js'
 
 const canvas = document.querySelector('canvas')
+
 const type = PIXI.utils.isWebGLSupported() ? 'WebGL' : 'canvas'
 PIXI.utils.sayHello(type)
 

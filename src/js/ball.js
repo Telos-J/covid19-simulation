@@ -67,11 +67,8 @@ class Ball extends PIXI.Sprite {
         for (const ball of balls.children) {
             const d = Math.hypot(this.x - ball.x, this.y - ball.y)
             if (this !== ball && d < this.r + ball.r) {
-                if ((this.tint === 0xff0000 || ball.tint === 0xff0000) && Math.random() < 0.2) {
-                    this.tint = 0xff0000
-                    ball.tint = 0xff0000
-                }
                 this.bounce(ball)
+                this.contage(ball)
                 break
             }
         }
@@ -90,6 +87,13 @@ class Ball extends PIXI.Sprite {
         ball.velocity = velocity
         ball.speed = speed
         ball.position = add(ball.position, scale(n2, ball.speed))
+    }
+
+    contage(ball) {
+        if ((this.tint === 0xff0000 || ball.tint === 0xff0000) && Math.random() < 0.2) {
+            this.tint = 0xff0000
+            ball.tint = 0xff0000
+        }
     }
 }
 
