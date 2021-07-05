@@ -17,7 +17,7 @@ class Ball extends PIXI.Sprite {
             this.speed * Math.sin(this.rotation)
         )
 
-        this.originalColor = Math.random() < 0.002 ? 0xff0000 : Math.random() * 0x00ffff
+        this.originalColor = Math.random() * 0x00ffff
         this.tint = this.originalColor
 
         const graphic = new PIXI.Graphics()
@@ -75,26 +75,9 @@ class Ball extends PIXI.Sprite {
     }
 
     bounce(ball) {
-        const n1 = normalize(sub(this.position, ball.position))
-        const n2 = normalize(sub(ball.position, this.position))
-        const m = scale(add(this.position, ball.position), 0.5)
-        const velocity = this.velocity
-        const speed = this.speed
-
-        this.velocity = ball.velocity
-        this.speed = ball.speed
-        this.position = add(m, scale(n1, this.r))
-
-        ball.velocity = velocity
-        ball.speed = speed
-        ball.position = add(m, scale(n2, ball.r))
     }
 
     contage(ball) {
-        if ((this.tint === 0xff0000 || ball.tint === 0xff0000) && Math.random() < 0.2) {
-            this.tint = 0xff0000
-            ball.tint = 0xff0000
-        }
     }
 }
 
