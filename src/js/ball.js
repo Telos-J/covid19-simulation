@@ -4,12 +4,12 @@ import { app } from './app'
 class Ball extends PIXI.Sprite {
     constructor() {
         super()
-        this.r = Math.random() * 20 + 20
+        this.r = Math.random() * 10 + 10
         this.x = Math.random() * (app.screen.width - 2 * this.r) + this.r
         this.y = Math.random() * (app.screen.height - 2 * this.r) + this.r
         this.anchor.set(0.5)
         this.rotation = Math.random() * Math.PI * 2
-        this.speed = Math.random() * 5 + 5
+        this.speed = Math.random() * 2 + 2
         this.vx = this.speed * Math.cos(this.rotation)
         this.vy = this.speed * Math.sin(this.rotation)
 
