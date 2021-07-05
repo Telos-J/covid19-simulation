@@ -7,13 +7,14 @@ class Ball extends PIXI.Sprite {
         this.r = Math.random() * 20 + 20
         this.x = Math.random() * (app.screen.width - 2 * this.r) + this.r
         this.y = Math.random() * (app.screen.height - 2 * this.r) + this.r
-        this.speed = Math.random() * 5 + 5
+        this.anchor.set(0.5)
+
         const rotation = Math.random() * Math.PI * 2
+        this.speed = Math.random() * 5 + 5
         this.vx = this.speed * Math.cos(rotation)
         this.vy = this.speed * Math.sin(rotation)
         this.originalColor = Math.random() * 0xffffff
         this.tint = this.originalColor
-        this.anchor.set(0.5)
 
         const graphic = new PIXI.Graphics()
         graphic.beginFill(0xffffff)
@@ -44,11 +45,11 @@ class Ball extends PIXI.Sprite {
 }
 
 const numBalls = 100
-let balls = new PIXI.ParticleContainer(numBalls, { tint: true });
+const balls = new PIXI.ParticleContainer(numBalls, { tint: true });
 
 function setupBalls() {
     app.stage.addChild(balls);
-    for (let i=0; i<numBalls; i++) {
+    for (let i = 0; i < numBalls; i++) {
         balls.addChild(new Ball())
     }
 }
