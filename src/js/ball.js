@@ -8,12 +8,12 @@ class Ball extends PIXI.Sprite {
         this.x = Math.random() * (app.screen.width - 2 * this.r) + this.r
         this.y = Math.random() * (app.screen.height - 2 * this.r) + this.r
         this.anchor.set(0.5)
-
-        const rotation = Math.random() * Math.PI * 2
+        this.rotation = Math.random() * Math.PI * 2
         this.speed = Math.random() * 5 + 5
-        this.vx = this.speed * Math.cos(rotation)
-        this.vy = this.speed * Math.sin(rotation)
-        this.originalColor = Math.random() * 0xffffff
+        this.vx = this.speed * Math.cos(this.rotation)
+        this.vy = this.speed * Math.sin(this.rotation)
+
+        this.originalColor = Math.random() * 0x00ffff
         this.tint = this.originalColor
 
         const graphic = new PIXI.Graphics()
