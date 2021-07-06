@@ -11,7 +11,6 @@ class Ball extends PIXI.Graphics {
         this.speed = Math.random() * 2 + 2
         this.vx = this.speed * Math.cos(this.rotation)
         this.vy = this.speed * Math.sin(this.rotation)
-
         this.originalColor = Math.random() * 0x00ffff
         this.tint = this.originalColor
         this.beginFill(0xffffff)
