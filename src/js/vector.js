@@ -6,7 +6,7 @@ function add(point1, point2) {
 
 function sub(point1, point2) {
     const newPoint = point1.clone()
-    newPoint.set(point1.x-point2.x, point1.y - point2.y)
+    newPoint.set(point1.x - point2.x, point1.y - point2.y)
     return newPoint
 }
 
