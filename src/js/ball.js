@@ -76,16 +76,14 @@ class Ball extends PIXI.Sprite {
         //     }
         // }
 
-        for (const cell of this.cells)
-            for (const ball of cell) {
-                this.tint = this.originalColor
-                const d = Math.hypot(this.x - ball.x, this.y - ball.y)
-                if (this !== ball && d < this.r + ball.r) {
-                    this.tint = 0xff0000
-                    break;
-                }
-                if (this.tint === 0xff0000) break
+        for (const client of grid.FindNear([this.x, this.y], [this.r * 2, this.r * 2])) {
+            this.tint = this.originalColor
+            const d = Math.hypot(this.x - client.ball.x, this.y - client.ball.y)
+            if (this !== client.ball && d < this.r + client.ball.r) {
+                this.tint = 0xff0000
+                break;
             }
+        }
     }
 
     bounce(ball) {
@@ -95,7 +93,7 @@ class Ball extends PIXI.Sprite {
     }
 }
 
-const numBalls = 1000
+const numBalls = 5000
 const balls = new PIXI.ParticleContainer(numBalls, { tint: true });
 
 function setupBalls() {
@@ -103,7 +101,7 @@ function setupBalls() {
     for (let i = 0; i < numBalls; i++) {
         const ball = new Ball()
         balls.addChild(ball)
-        grid.insert(ball)
+        grid.NewClient(ball)
     }
 
     console.log(grid)

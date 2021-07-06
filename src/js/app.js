@@ -32,9 +32,8 @@ app.ticker.add(loop)
 
 function loop(deltaTime) {
     stats.begin()
-    grid.clear()
     for (const ball of balls.children) {
-        grid.insert(ball)
+        grid.UpdateClient(ball.client)
         ball.move()
         ball.collide()
     }
