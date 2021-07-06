@@ -6,9 +6,14 @@ import '../css/style.scss'
 import * as PIXI from 'pixi.js'
 import { balls, setupBalls } from './ball'
 import { Renderer } from 'pixi.js'
+import * as Stats from 'stats.js'
 
 
 const canvas = document.querySelector('canvas')
+
+const stats = new Stats()
+stats.showPanel(0)
+document.body.appendChild(stats.dom)
 
 let app = new PIXI.Application({
     view: canvas,
@@ -23,10 +28,12 @@ PIXI.Loader.shared.load(setupBalls)
 app.ticker.add(loop)
 
 function loop(deltaTime){
+    stats.begin()
     for (const ball of balls.children){
         ball.move()
-        ball.collide()
+        //ball.collide()
     }
+    stats.end()
 }
 
 export{app}
