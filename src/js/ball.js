@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
-import { app } from './app'
-import { add, sub, scale, dot, magnitude, normalize } from './helper'
+import { app, grid } from './app'
+import { add, sub, scale, dot, magnitude, normalize } from './vector'
+
 
 class Ball extends PIXI.Sprite {
     constructor() {
@@ -25,6 +26,8 @@ class Ball extends PIXI.Sprite {
         graphic.arc(0, 0, this.r, 0, Math.PI * 2)
         graphic.endFill()
         this.texture = app.renderer.generateTexture(graphic)
+
+        this.cells = []
     }
 
     get vx() {
@@ -64,14 +67,25 @@ class Ball extends PIXI.Sprite {
     }
 
     collide() {
-        for (const ball of balls.children) {
-            const d = Math.hypot(this.x - ball.x, this.y - ball.y)
-            if (this !== ball && d < this.r + ball.r) {
-                this.bounce(ball)
-                this.contage(ball)
-                break
+        // for (const ball of balls.children) {
+        //     const d = Math.hypot(this.x - ball.x, this.y - ball.y)
+        //     if (this !== ball && d < this.r + ball.r) {
+        //         this.bounce(ball)
+        //         this.contage(ball)
+        //         break
+        //     }
+        // }
+
+        for (const cell of this.cells)
+            for (const ball of cell) {
+                this.tint = this.originalColor
+                const d = Math.hypot(this.x - ball.x, this.y - ball.y)
+                if (this !== ball && d < this.r + ball.r) {
+                    this.tint = 0xff0000
+                    break;
+                }
+                if (this.tint === 0xff0000) break
             }
-        }
     }
 
     bounce(ball) {
@@ -87,8 +101,12 @@ const balls = new PIXI.ParticleContainer(numBalls, { tint: true });
 function setupBalls() {
     app.stage.addChild(balls);
     for (let i = 0; i < numBalls; i++) {
-        balls.addChild(new Ball())
+        const ball = new Ball()
+        balls.addChild(ball)
+        grid.insert(ball)
     }
+
+    console.log(grid)
 }
 
 export { balls, setupBalls }
