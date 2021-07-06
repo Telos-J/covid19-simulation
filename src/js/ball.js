@@ -1,26 +1,41 @@
 import * as PIXI from 'pixi.js'
 import { app } from './app'
 
-class Ball extends PIXI.Sprite {
+class Ball extends PIXI.Graphics {
     constructor() {
         super()
-        this.r = Math.random() * 20 + 20
-        this.x = Math.random() * (app.screen.width - 2 * this.r)
+        this.r = Math.random() * 10 + 10
+        this.x = Math.random() * (app.screen.width - 2 * this.r) + this.r
         this.y = Math.random() * (app.screen.height - 2 * this.r) + this.r
-        this.speed = Math.random() * 5 + 5
-        const rotation = Math.random() * Math.PI * 2
-        this.vx = this.speed * Math.cos(rotation)
-        this.vy = this.speed * Math.sin(rotation)
-        this.originalColor = Math.random() * 0xffffff
+        this.rotation = Math.random() * Math.PI * 2
+        this.speed = Math.random() * 2 + 2
+        this.velocity = new PIXI.Point(
+            this.speed * Math.cos(this.rotation),
+            this.speed * Math.sin(this.rotation)
+        )
+        this.originalColor = Math.random() * 0x00ffff
         this.tint = this.originalColor
-        this.anchor.set(0.5) 
-
-        const graphic = new PIXI.Graphics()
-        graphic.beginFill(0xffffff)
-        graphic.arc(0, 0, this.r, 0, Math.PI * 2)
-        graphic.endFill()
-        this.texture = app.renderer.generateTexture(graphic)
+        this.beginFill(0xffffff)
+        this.arc(0, 0, this.r, 0, Math.PI * 2)
+        this.endFill()
     }
+
+    get vx() {
+        return this.velocity.x
+    }
+
+    get vy() {
+        return this.velocity.y
+    }
+
+    set vx(val) {
+        this.velocity.x = val
+    }
+
+    set vy(val) {
+        this.velocity.y = val
+    }
+
 
     move() {
         this.x += this.vx
@@ -44,11 +59,11 @@ class Ball extends PIXI.Sprite {
 }
 
 const numBalls = 100
-let balls = new PIXI.ParticleContainer(numBalls, { tint: true });
+const balls = new PIXI.Container()
 
 function setupBalls() {
     app.stage.addChild(balls);
-    for (let i=0; i<numBalls; i++) {
+    for (let i = 0; i < numBalls; i++) {
         balls.addChild(new Ball())
     }
 }
