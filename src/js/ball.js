@@ -6,7 +6,7 @@ import { add, sub, scale, dot, magnitude, normalize } from './vector'
 class Ball extends PIXI.Sprite {
     constructor() {
         super()
-        this.r = Math.random() * 10 + 10
+        this.r = Math.random() * 5 + 5
         this.x = Math.random() * (app.screen.width - 2 * this.r) + this.r
         this.y = Math.random() * (app.screen.height - 2 * this.r) + this.r
         this.anchor.set(0.5)
@@ -93,7 +93,7 @@ class Ball extends PIXI.Sprite {
     }
 }
 
-const numBalls = 5000
+const numBalls = 10000
 const balls = new PIXI.ParticleContainer(numBalls, { tint: true });
 
 function setupBalls() {

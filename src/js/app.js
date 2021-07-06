@@ -25,7 +25,7 @@ const app = new PIXI.Application({
     resolution: devicePixelRatio || 1
 });
 
-const grid = new SpatialGrid([[0, 0], [1600, 900]], [16, 9])
+const grid = new SpatialGrid([[0, 0], [1600, 900]], [160, 90])
 
 PIXI.Loader.shared.load(setupBalls)
 app.ticker.add(loop)
