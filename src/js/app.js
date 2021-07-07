@@ -25,15 +25,17 @@ const app = new PIXI.Application({
     resolution: devicePixelRatio || 1
 });
 
-const grid = new SpatialGrid([[0, 0], [1600, 900]], [160, 90])
+app.stage.sortableChildren = true
+
+const grid = new SpatialGrid([[0, 0], [1600, 900]], [100, 100])
+grid.visualize()
 
 PIXI.Loader.shared.load(setupBalls)
-app.ticker.add(loop)
+// app.ticker.add(loop)
 
 function loop(deltaTime) {
     stats.begin()
     for (const ball of balls.children) {
-        grid.UpdateClient(ball.client)
         ball.move()
         ball.collide()
     }

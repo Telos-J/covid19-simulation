@@ -1,195 +1,73 @@
-const math = (function() {
-    return {
-        rand_range: function(a, b) {
-            return Math.random() * (b - a) + a;
-        },
-
-        rand_normalish: function() {
-            const r = Math.random() + Math.random() + Math.random() + Math.random();
-            return (r / 4.0) * 2.0 - 1;
-        },
-
-        rand_int: function(a, b) {
-            return Math.round(Math.random() * (b - a) + a);
-        },
-
-        lerp: function(x, a, b) {
-            return x * (b - a) + a;
-        },
-
-        smoothstep: function(x, a, b) {
-            x = x * x * (3.0 - 2.0 * x);
-            return x * (b - a) + a;
-        },
-
-        smootherstep: function(x, a, b) {
-            x = x * x * x * (x * (x * 6 - 15) + 10);
-            return x * (b - a) + a;
-        },
-
-        clamp: function(x, a, b) {
-            return Math.min(Math.max(x, a), b);
-        },
-
-        sat: function(x) {
-            return Math.min(Math.max(x, 0.0), 1.0);
-        },
-    };
-})()
+import * as PIXI from 'pixi.js'
+import { app } from './app'
 
 class SpatialGrid {
-    constructor(bounds, dimensions) {
-        const [x, y] = dimensions;
-        this._cells = [...Array(x)].map(_ => [...Array(y)].map(_ => (null)));
-        this._dimensions = dimensions;
-        this._bounds = bounds;
-        this._queryIds = 0;
+    constructor(bounds, cellsize) {
+        this.min = bounds[0]
+        this.max = bounds[1]
+        this.cellsize = cellsize
+        this.numCol = (this.max[0] - this.min[0]) / this.cellsize[0]
+        this.numRow = (this.max[1] - this.min[1]) / this.cellsize[1]
+        this.cells = [...Array(this.numCol)].map(_ => [...Array(this.numRow)].map(_ => []));
+        this.balls = new Set()
     }
 
-    _GetCellIndex(position) {
-        const x = math.sat((position[0] - this._bounds[0][0]) / (
-            this._bounds[1][0] - this._bounds[0][0]));
-        const y = math.sat((position[1] - this._bounds[0][1]) / (
-            this._bounds[1][1] - this._bounds[0][1]));
-
-        const xIndex = Math.floor(x * (this._dimensions[0] - 1));
-        const yIndex = Math.floor(y * (this._dimensions[1] - 1));
-
-        return [xIndex, yIndex];
-    }
-
-    NewClient(ball) {
-
-        const client = {
-            ball: ball,
-            position: [ball.x, ball.y],
-            dimensions: [ball.r * 2, ball.r * 2],
-            _cells: {
-                min: null,
-                max: null,
-                nodes: null,
-            },
-            _queryId: -1,
-        };
-
-        ball.client = client
-
-        this._Insert(client);
-
-        return client;
-    }
-
-    UpdateClient(client) {
-        client.position = [client.ball.position.x, client.ball.position.y]
-        const [x, y] = client.position;
-        const [w, h] = client.dimensions;
-
-        const i1 = this._GetCellIndex([x - w / 2, y - h / 2]);
-        const i2 = this._GetCellIndex([x + w / 2, y + h / 2]);
-
-        if (client._cells.min[0] == i1[0] &&
-            client._cells.min[1] == i1[1] &&
-            client._cells.max[0] == i2[0] &&
-            client._cells.max[1] == i2[1]) {
-            return;
+    visualize() {
+        const graphic = new PIXI.Graphics()
+        graphic.lineStyle(1, 0xffffff)
+        graphic.zIndex = 10
+        for (let col = this.min[0]; col <= this.max[0]; col += this.cellsize[0]) {
+            graphic.moveTo(col, this.min[1])
+            graphic.lineTo(col, this.max[1])
         }
-
-        this.Remove(client);
-        this._Insert(client);
+        for (let row = this.min[1]; row <= this.max[1]; row += this.cellsize[1]) {
+            graphic.moveTo(this.min[0], row)
+            graphic.lineTo(this.max[0], row)
+        }
+        app.stage.addChild(graphic)
     }
 
-    FindNear(position, bounds) {
-        const [x, y] = position;
-        const [w, h] = bounds;
+    clear() {
+        for (let col in this.cells)
+            for (let row in this.cells[col])
+                this.cells[col][row] = []
+    }
 
-        const i1 = this._GetCellIndex([x - w / 2, y - h / 2]);
-        const i2 = this._GetCellIndex([x + w / 2, y + h / 2]);
+    getCellIndex(x, y) {
+        const col = Math.max(0, Math.min(this.numCol - 1, Math.floor(x / this.cellsize[0])))
+        const row = Math.max(0, Math.min(this.numRow - 1, Math.floor(y / this.cellsize[1])))
 
-        const clients = [];
-        const queryId = this._queryIds++;
+        return [col, row]
+    }
 
-        for (let x = i1[0], xn = i2[0]; x <= xn; ++x) {
-            for (let y = i1[1], yn = i2[1]; y <= yn; ++y) {
-                let head = this._cells[x][y];
+    insert(ball) {
+        const min = this.getCellIndex(ball.x - ball.r, ball.y - ball.r)
+        const max = this.getCellIndex(ball.x + ball.r, ball.y + ball.r)
+        const [col, row] = this.getCellIndex(ball.x, ball.y)
 
-                while (head) {
-                    const v = head.client;
-                    head = head.next;
-
-                    if (v._queryId != queryId) {
-                        v._queryId = queryId;
-                        clients.push(v);
-                    }
-                }
+        for (let col = min[0]; col <= max[0]; col++)
+            for (let row = min[1]; row <= max[1]; row++) {
+                const cell = this.cells[col][row]
+                cell.push(ball)
+                ball.cells.push(cell)
             }
-        }
-        return clients;
     }
 
-    _Insert(client) {
-        const [x, y] = client.position;
-        const [w, h] = client.dimensions;
+    update(ball) {
+        [min1, max1] = ball.cells.bounds
+        const min2 = this.getCellIndex(ball.x - ball.r, ball.y - ball.r)
+        const max2 = this.getCellIndex(ball.x + ball.r, ball.y + ball.r)
+        if (min1[0] === min2[0] && min1[1] === min2[1]) return
 
-        const i1 = this._GetCellIndex([x - w / 2, y - h / 2]);
-        const i2 = this._GetCellIndex([x + w / 2, y + h / 2]);
-
-        const nodes = [];
-
-        for (let x = i1[0], xn = i2[0]; x <= xn; ++x) {
-            nodes.push([]);
-
-            for (let y = i1[1], yn = i2[1]; y <= yn; ++y) {
-                const xi = x - i1[0];
-
-                const head = {
-                    next: null,
-                    prev: null,
-                    client: client,
-                };
-
-                nodes[xi].push(head);
-
-                head.next = this._cells[x][y];
-                if (this._cells[x][y]) {
-                    this._cells[x][y].prev = head;
-                }
-
-                this._cells[x][y] = head;
+        ball.cells = []
+        for (let col = min2[0]; col <= max2[0]; col++)
+            for (let row = min2[1]; row <= max2[1]; row++) {
+                const cell = this.cells[col][row]
+                cell.push(ball)
+                ball.cells.push(cell)
             }
-        }
-
-        client._cells.min = i1;
-        client._cells.max = i2;
-        client._cells.nodes = nodes;
     }
 
-    Remove(client) {
-        const i1 = client._cells.min;
-        const i2 = client._cells.max;
-
-        for (let x = i1[0], xn = i2[0]; x <= xn; ++x) {
-            for (let y = i1[1], yn = i2[1]; y <= yn; ++y) {
-                const xi = x - i1[0];
-                const yi = y - i1[1];
-                const node = client._cells.nodes[xi][yi];
-
-                if (node.next) {
-                    node.next.prev = node.prev;
-                }
-                if (node.prev) {
-                    node.prev.next = node.next;
-                }
-
-                if (!node.prev) {
-                    this._cells[x][y] = node.next;
-                }
-            }
-        }
-
-        client._cells.min = null;
-        client._cells.max = null;
-        client._cells.nodes = null;
-    }
 }
 
 export { SpatialGrid }
