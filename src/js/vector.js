@@ -28,4 +28,5 @@ function normalize(point, k = 1) {
     return scale(point, k / magnitude(point))
 }
 
-export { add, sub, scale, dot, magnitude, normalize }
+
+export { add, sub, dot, magnitude, scale, normalize }

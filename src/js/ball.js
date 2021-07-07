@@ -1,33 +1,24 @@
 import * as PIXI from 'pixi.js'
-import { app, grid } from './app'
-import { add, sub, scale, dot, magnitude, normalize } from './vector'
+import { app } from './app'
+import { add, sub, dot, magnitude, scale, normalize } from './vector'
 
-
-class Ball extends PIXI.Sprite {
+class Ball extends PIXI.Graphics {
     constructor() {
+        const speed = Math.random() * 2 + 2
+        const rotation = Math.random() * Math.PI * 2
         super()
-        this.r = Math.random() * 5 + 5
+        this.r = Math.random() * 10 + 10
         this.x = Math.random() * (app.screen.width - 2 * this.r) + this.r
         this.y = Math.random() * (app.screen.height - 2 * this.r) + this.r
-        this.anchor.set(0.5)
-
-        this.speed = Math.random() * 2 + 2
-        this.rotation = Math.random() * Math.PI * 2
         this.velocity = new PIXI.Point(
-            this.speed * Math.cos(this.rotation),
-            this.speed * Math.sin(this.rotation)
+            speed * Math.cos(rotation),
+            speed * Math.sin(rotation)
         )
-
-        this.originalColor = Math.random() * 0x00ffff
+        this.originalColor = Math.random() < 0.01 ? 0xff0000 : Math.random() * 0x00ffff
         this.tint = this.originalColor
-
-        const graphic = new PIXI.Graphics()
-        graphic.beginFill(0xffffff)
-        graphic.arc(0, 0, this.r, 0, Math.PI * 2)
-        graphic.endFill()
-        this.texture = app.renderer.generateTexture(graphic)
-
-        this.cells = []
+        this.beginFill(0xffffff)
+        this.arc(0, 0, this.r, 0, Math.PI * 2)
+        this.endFill()
     }
 
     get vx() {
@@ -45,6 +36,7 @@ class Ball extends PIXI.Sprite {
     set vy(val) {
         this.velocity.y = val
     }
+
 
     move() {
         this.position = add(this.position, this.velocity)
@@ -67,34 +59,39 @@ class Ball extends PIXI.Sprite {
     }
 
     collide() {
-        // for (const ball of balls.children) {
-        //     const d = Math.hypot(this.x - ball.x, this.y - ball.y)
-        //     if (this !== ball && d < this.r + ball.r) {
-        //         this.bounce(ball)
-        //         this.contage(ball)
-        //         break
-        //     }
-        // }
-
-        for (const client of grid.FindNear([this.x, this.y], [this.r * 2, this.r * 2])) {
-            this.tint = this.originalColor
-            const d = Math.hypot(this.x - client.ball.x, this.y - client.ball.y)
-            if (this !== client.ball && d < this.r + client.ball.r) {
-                this.tint = 0xff0000
-                break;
+        for (const ball of balls.children) {
+            const d = Math.hypot(this.x - ball.x, this.y - ball.y)
+            if (this !== ball && d < this.r + ball.r) {
+                this.bounce(ball)
+                this.contage(ball)
+                break
             }
         }
     }
 
     bounce(ball) {
+        const m = scale(add(this.position, ball.position), 0.5)
+        const n1 = normalize(sub(this.position, ball.position), this.r)
+        const n2 = normalize(sub(ball.position, this.position), ball.r)
+
+        this.position = add(m, n1)
+        ball.position = add(m, n2)
+
+        const velocity = this.velocity
+        this.velocity = ball.velocity
+        ball.velocity = velocity
     }
 
     contage(ball) {
+        if ((this.tint === 0xff0000 || ball.tint === 0xff0000) && Math.random() < 0.23) {
+            this.tint = 0xff0000
+            ball.tint = 0xff0000
+        }
     }
 }
 
-const numBalls = 10000
-const balls = new PIXI.ParticleContainer(numBalls, { tint: true });
+const numBalls = 1000
+const balls = new PIXI.Container()
 
 function setupBalls() {
     app.stage.addChild(balls);

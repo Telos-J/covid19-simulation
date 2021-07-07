@@ -5,8 +5,6 @@ import '../icon-512.png'
 import '../css/style.scss'
 import * as PIXI from 'pixi.js'
 import * as Stats from 'stats.js'
-import { SpatialGrid } from './spacialhash'
-import { balls, setupBalls } from './ball'
 
 const canvas = document.querySelector('canvas')
 
@@ -37,7 +35,6 @@ function loop(deltaTime) {
         ball.move()
         ball.collide()
     }
-
     stats.end()
 }
 
