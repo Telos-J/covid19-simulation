@@ -14,7 +14,7 @@ class Ball extends PIXI.Graphics {
             speed * Math.cos(rotation),
             speed * Math.sin(rotation)
         )
-        this.originalColor = 0x00ffff * Math.random()//Math.random() < 0.0001 ? 0xff0000 : Math.random() * 0x00ffff
+        this.originalColor = Math.random() < 0.0001 ? 0xff0000 : Math.random() * 0x00ffff
         this.tint = this.originalColor
         this.beginFill(0xffffff)
         this.arc(0, 0, this.r, 0, Math.PI * 2)
@@ -64,21 +64,22 @@ class Ball extends PIXI.Graphics {
             for (let ball of cell) {
                 const d = Math.hypot(this.x - ball.x, this.y - ball.y)
                 if (this !== ball && d < this.r + ball.r) {
-                    this.tint = 0xff0000
-                    ball.tint = 0xff0000
+                    this.bounce(ball)
+                    this.contage(ball)
                     break
                 }
             }
+    }
 
-        // for (const client of grid.FindNear([this.x, this.y], [this.r * 2, this.r * 2])) {
-        //     const d = Math.hypot(this.x - client.ball.x, this.y - client.ball.y)
-        //     if (this !== client.ball && d < this.r + client.ball.r) {
-        //         this.bounce(client.ball)
-        //         this.contage(client.ball)
-        //         break;
-        //     }
-        // }
-
+    collide_sd() {
+        for (const client of grid_sd.FindNear([this.x, this.y], [this.r * 2, this.r * 2])) {
+            const d = Math.hypot(this.x - client.ball.x, this.y - client.ball.y)
+            if (this !== client.ball && d < this.r + client.ball.r) {
+                this.tint = 0x00ff00
+                client.ball.tint = 0x00ff00
+                break;
+            }
+        }
     }
 
     bounce(ball) {
@@ -104,6 +105,7 @@ class Ball extends PIXI.Graphics {
 
 const numBalls = 10000
 const balls = new PIXI.Container()
+let avgDuration = 0
 
 function setupBalls() {
     app.stage.addChild(balls);
@@ -112,11 +114,6 @@ function setupBalls() {
         balls.addChild(ball)
         grid.insert(ball)
     }
-
-    console.clear()
-    console.time()
-    for (let ball of balls.children) ball.collide()
-    console.timeEnd()
 }
 
 export { balls, setupBalls }

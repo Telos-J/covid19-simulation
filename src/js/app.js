@@ -3,7 +3,7 @@ import '../image.png'
 import '../icon-192.png'
 import '../icon-512.png'
 import '../css/style.scss'
-import { SpatialGrid } from './spacialhash'
+import { SpatialHash } from './spacialhash'
 import { balls, setupBalls } from './ball'
 import * as PIXI from 'pixi.js'
 import * as Stats from 'stats.js'
@@ -27,15 +27,16 @@ const app = new PIXI.Application({
 
 app.stage.sortableChildren = true
 
-const grid = new SpatialGrid([[0, 0], [1600, 900]], [100, 100])
-grid.visualize()
+let grid = new SpatialHash([[0, 0], [1600, 900]], [10, 10])
+//grid.visualize()
 
 PIXI.Loader.shared.load(setupBalls)
-// app.ticker.add(loop)
+app.ticker.add(loop)
 
 function loop(deltaTime) {
     stats.begin()
     for (const ball of balls.children) {
+        grid.update(ball)
         ball.move()
         ball.collide()
     }
