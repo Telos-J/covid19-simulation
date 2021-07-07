@@ -3,6 +3,8 @@ import '../image.png'
 import '../icon-192.png'
 import '../icon-512.png'
 import '../css/style.scss'
+import { SpatialGrid } from './spacialhash'
+import { balls, setupBalls } from './ball'
 import * as PIXI from 'pixi.js'
 import * as Stats from 'stats.js'
 
