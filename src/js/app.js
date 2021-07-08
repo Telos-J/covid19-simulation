@@ -3,12 +3,12 @@ import '../image.png'
 import '../icon-192.png'
 import '../icon-512.png'
 import '../css/style.scss'
+import { SpatialHash } from './spacialhash'
 import { balls, setupBalls } from './ball'
-import { SpatialHash } from './spatialhash'
 import * as PIXI from 'pixi.js'
 import * as Stats from 'stats.js'
 
-const canvas = document.querySelector('canvas')
+const canvas = document.querySelector('#sim')
 
 const type = PIXI.utils.isWebGLSupported() ? 'WebGL' : 'canvas'
 PIXI.utils.sayHello(type)
@@ -17,7 +17,7 @@ const stats = new Stats()
 stats.showPanel(0)
 document.body.appendChild(stats.dom)
 
-let app = new PIXI.Application({
+const app = new PIXI.Application({
     view: canvas,
     width: 1600,
     height: 900,
@@ -25,14 +25,18 @@ let app = new PIXI.Application({
     resolution: devicePixelRatio || 1
 });
 
-const spatialHash = new SpatialHash([[0, 0], [1600, 900]], [100, 100])
+app.stage.sortableChildren = true
+
+let spatialHash = new SpatialHash([[0, 0], [1600, 900]], [10, 10])
+//grid.visualize()
 
 PIXI.Loader.shared.load(setupBalls)
-// app.ticker.add(loop)
+app.ticker.add(loop)
 
 function loop(deltaTime) {
     stats.begin()
     for (const ball of balls.children) {
+        spatialHash.update(ball)
         ball.move()
         ball.collide()
     }
