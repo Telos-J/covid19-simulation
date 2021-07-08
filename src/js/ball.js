@@ -1,7 +1,6 @@
 import * as PIXI from 'pixi.js'
-import { app } from './app'
 import { add, sub, dot, magnitude, scale, normalize } from './vector'
-import {app, spacialHash} from './app'
+import {app, spatialHash} from './app'
 
 class Ball extends PIXI.Graphics {
     constructor() {
@@ -104,7 +103,7 @@ function setupBalls() {
     for (let i = 0; i < numBalls; i++) {
         const ball=new Ball()
         balls.addChild(ball)
-        SpatialHash.insert(ball)
+        spatialHash.insert(ball)
     }
 }
 

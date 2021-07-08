@@ -39,4 +39,4 @@ function loop(deltaTime) {
     stats.end()
 }
 
-export { app , setupBalls}
+export { app , spatialHash}
