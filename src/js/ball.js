@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js'
+import { app, spatialHash } from './app'
 import { add, sub, dot, magnitude, scale, normalize } from './vector'
-import {app, spatialHash} from './app'
 
 class Ball extends PIXI.Graphics {
     constructor() {
@@ -59,7 +59,7 @@ class Ball extends PIXI.Graphics {
     }
 
     collide() {
-        for (const ball of balls.children) {
+        for (let ball of balls.children) {
             const d = Math.hypot(this.x - ball.x, this.y - ball.y)
             if (this !== ball && d < this.r + ball.r) {
                 this.bounce(ball)
@@ -67,12 +67,18 @@ class Ball extends PIXI.Graphics {
                 break
             }
         }
-        this.cells=[cell10,cell11]
-        for (let cell of cells){
-            e
-        }
+
+        // for (let cell of this.cells) {
+        //     for (let ball of cell) {
+        //         const d = Math.hypot(this.x - ball.x, this.y - ball.y)
+        //         if (this !== ball && d < this.r + ball.r) {
+        //             this.bounce(ball)
+        //             this.contage(ball)
+        //             break
+        //         }
+        //     }
+        // }
     }
-    
 
     bounce(ball) {
         const m = scale(add(this.position, ball.position), 0.5)
@@ -101,10 +107,13 @@ const balls = new PIXI.Container()
 function setupBalls() {
     app.stage.addChild(balls);
     for (let i = 0; i < numBalls; i++) {
-        const ball=new Ball()
+        const ball = new Ball()
         balls.addChild(ball)
         spatialHash.insert(ball)
     }
+
+    console.log(spatialHash.cells)
+    spatialHash.visualize()
 }
 
 export { balls, setupBalls }

@@ -4,7 +4,7 @@ import '../icon-192.png'
 import '../icon-512.png'
 import '../css/style.scss'
 import { balls, setupBalls } from './ball'
-import { SpatialHash } from './v'
+import { SpatialHash } from './spatialhash'
 import * as PIXI from 'pixi.js'
 import * as Stats from 'stats.js'
 
@@ -25,10 +25,10 @@ let app = new PIXI.Application({
     resolution: devicePixelRatio || 1
 });
 
-const spatialHash=new SpatialHash([[0,0],[1600,900]],[100,100])
+const spatialHash = new SpatialHash([[0, 0], [1600, 900]], [100, 100])
 
 PIXI.Loader.shared.load(setupBalls)
-//app.ticker.add(loop)
+// app.ticker.add(loop)
 
 function loop(deltaTime) {
     stats.begin()
@@ -39,4 +39,4 @@ function loop(deltaTime) {
     stats.end()
 }
 
-export { app , spatialHash}
+export { app, spatialHash }
