@@ -92,7 +92,7 @@ class Ball extends PIXI.Graphics {
     }
 }
 
-const numBalls = 10000
+const numBalls = 8000
 const balls = new PIXI.Container()
 
 function setupBalls() {

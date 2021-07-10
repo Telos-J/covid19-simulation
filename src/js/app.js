@@ -7,6 +7,7 @@ import { SpatialHash } from './spacialhash'
 import { balls, setupBalls } from './ball'
 import * as PIXI from 'pixi.js'
 import * as Stats from 'stats.js'
+import {chart} from './stats.js'
 
 const canvas = document.querySelector('#sim')
 
@@ -42,5 +43,6 @@ function loop(deltaTime) {
     }
     stats.end()
 }
+
 
 export { app, spatialHash }
