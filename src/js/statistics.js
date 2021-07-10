@@ -86,7 +86,7 @@ function updateChart(infectedNum, susceptableNum) {
     susceptable.data.push(susceptableNum)
 }
 
-setInterval(() => chart.update(), 2000)
+setInterval(() => chart.update(), 100)
 chart.canvas.addEventListener('click', () => {
     const chartContainer = chart.canvas.parentNode
     if (chartContainer.classList.contains('maximized')) {
