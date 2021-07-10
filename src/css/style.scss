@@ -1,15 +1,14 @@
 @import url(~sanitize.css);
 
 body {
-  height: 100vh;
-  display: grid;
-  place-content: center;
-  background-color: #274754;
+    height: 100vh;
+    display: grid;
+    place-content: center;
+    background-color: #274754;
 }
 
-canvas {
-  width: 80vw;
-  aspect-ratio: 16/9;
-  border: 1px solid white;
+#sim {
+    width: 80vw;
+    aspect-ratio: 16/9;
+    border: 1px solid white;
 }
-
