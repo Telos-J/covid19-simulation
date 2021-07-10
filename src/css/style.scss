@@ -5,6 +5,7 @@ body {
     display: grid;
     place-content: center;
     background-color: #274754;
+    overflow: hidden;
 }
 
 #sim {
@@ -12,3 +13,17 @@ body {
     aspect-ratio: 16/9;
     border: 1px solid white;
 }
+
+#chart-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 120px;
+    aspect-ratio: 16/9;
+    background-color: #040728;
+
+    &.maximized {
+        width: 160vh;
+    }
+}
+

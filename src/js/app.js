@@ -3,8 +3,9 @@ import '../image.png'
 import '../icon-192.png'
 import '../icon-512.png'
 import '../css/style.scss'
-import { SpatialHash } from './spacialhash'
+import { SpatialHash } from './spatialhash'
 import { balls, setupBalls } from './ball'
+import { updateChart } from './statistics'
 import * as PIXI from 'pixi.js'
 import * as Stats from 'stats.js'
 
@@ -35,11 +36,20 @@ app.ticker.add(loop)
 
 function loop(deltaTime) {
     stats.begin()
-    for (const ball of balls.children) {
+    for (let ball of balls.children) {
         spatialHash.update(ball)
         ball.move()
         ball.collide()
     }
+
+    let infectedNum = 0, susceptableNum = 0;
+    for (let ball of balls.children) {
+        if (ball.tint === 0xff0000) infectedNum++
+        else susceptableNum++
+    }
+
+
+    if (susceptableNum) updateChart(infectedNum, susceptableNum)
     stats.end()
 }
 
