@@ -46,7 +46,7 @@ const config = {
             },
             title: {
                 display: false,
-                text: 'Real-time data of Covid19'
+                text: 'Real-time data of Covid19 Simulation'
             },
         },
         scales: {
@@ -87,16 +87,19 @@ function updateChart(infectedNum, susceptableNum) {
 }
 
 setInterval(() => chart.update(), 100)
-chart.canvas.addEventListener('click', () => {
+window.addEventListener('click', (e) => {
     const chartContainer = chart.canvas.parentNode
-    if (chartContainer.classList.contains('maximized')) {
+    const rect = chartContainer.getBoundingClientRect()
+    if ((e.clientX < rect.x || e.clientY > rect.bottom) &&
+        chartContainer.classList.contains('maximized')) {
         chartContainer.classList.remove('maximized')
         config.options.plugins.legend.display = false
         config.options.plugins.title.display = false
         config.options.scales.x.display = false
         config.options.scales.y.title.display = false
     }
-    else {
+    else if ((e.clientX > rect.x && e.clientY < rect.bottom) &&
+        !chartContainer.classList.contains('maximized')) {
         chartContainer.classList.add('maximized')
         config.options.plugins.legend.display = true
         config.options.plugins.title.display = true
