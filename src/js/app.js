@@ -16,7 +16,7 @@ PIXI.utils.sayHello(type)
 
 const stats = new Stats()
 stats.showPanel(0)
-document.body.appendChild(stats.dom)
+// document.body.appendChild(stats.dom)
 
 const app = new PIXI.Application({
     view: canvas,
@@ -27,6 +27,7 @@ const app = new PIXI.Application({
 });
 
 app.stage.sortableChildren = true
+app.renderer.plugins.interaction.autoPreventDefault = false;
 
 let spatialHash = new SpatialHash([[0, 0], [1600, 900]], [10, 10])
 //grid.visualize()

@@ -1,5 +1,6 @@
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
+Chart.defaults.color = '#fff'
 
 const labels = []
 
@@ -70,6 +71,9 @@ const config = {
                     }
                 },
             }
+        },
+        layout: {
+            padding: 0
         }
     }
 }
@@ -90,22 +94,28 @@ setInterval(() => chart.update(), 100)
 window.addEventListener('click', (e) => {
     const chartContainer = chart.canvas.parentNode
     const rect = chartContainer.getBoundingClientRect()
-    if ((e.clientX < rect.x || e.clientY > rect.bottom) &&
+    if ((e.clientX < rect.x || e.clientX > rect.right || e.clientY < rect.y || e.clientY > rect.bottom) &&
         chartContainer.classList.contains('maximized')) {
         chartContainer.classList.remove('maximized')
         config.options.plugins.legend.display = false
         config.options.plugins.title.display = false
         config.options.scales.x.display = false
         config.options.scales.y.title.display = false
+        config.options.layout.padding = 0
     }
-    else if ((e.clientX > rect.x && e.clientY < rect.bottom) &&
+    if ((e.clientX > rect.x && e.clientX < rect.right && e.clientY > rect.y && e.clientY < rect.bottom) &&
         !chartContainer.classList.contains('maximized')) {
         chartContainer.classList.add('maximized')
-        config.options.plugins.legend.display = true
-        config.options.plugins.title.display = true
-        config.options.scales.x.display = true
-        config.options.scales.y.title.display = true
+        if (window.innerWidth > 768) {
+            config.options.plugins.legend.display = true
+            config.options.plugins.title.display = true
+            config.options.scales.x.display = true
+            config.options.scales.y.title.display = true
+            config.options.layout.padding = 20
+        }
     }
+
+    console.log(window.innerWidth)
 })
 
 export { updateChart }
