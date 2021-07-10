@@ -117,6 +117,13 @@ object-assign
  */
 
 /*!
+ * Chart.js v3.4.1
+ * https://www.chartjs.org
+ * (c) 2021 Chart.js Contributors
+ * Released under the MIT License
+ */
+
+/*!
  * pixi.js - v6.0.4
  * Compiled Tue, 11 May 2021 18:00:23 UTC
  *
