@@ -64,8 +64,8 @@ const chart = new Chart(
 let x = 0
 function updateChart(infectedNum, susceptableNum){
   labels.push(x++)
-  infected.data.push(Math.floor(Math.random() * 50))
-  susceptable.data.push(Math.floor(Math.random() * 50))
+  infected.data.push(infectedNum)
+  susceptable.data.push(susceptableNum)
   chart.update()
 }
 
