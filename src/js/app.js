@@ -7,7 +7,8 @@ import { SpatialHash } from './spacialhash'
 import { balls, setupBalls } from './ball'
 import * as PIXI from 'pixi.js'
 import * as Stats from 'stats.js'
-import {chart} from './stats.js'
+import {chart, infected} from './stats.js'
+import { updateChart } from './stats.js'
 
 const canvas = document.querySelector('#sim')
 
@@ -41,6 +42,11 @@ function loop(deltaTime) {
         ball.move()
         ball.collide()
     }
+    let infectedNum=0
+    for (let ball of balls.children){
+        if (ball.tint==0xff0000) infectedNum++
+    }
+    updateChart(infectedNum,balls.children.length-infectedNum)
     stats.end()
 }
 
