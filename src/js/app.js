@@ -16,7 +16,7 @@ PIXI.utils.sayHello(type)
 
 const stats = new Stats()
 stats.showPanel(0)
-// document.body.appendChild(stats.dom)
+//document.body.appendChild(stats.dom)
 
 const app = new PIXI.Application({
     view: canvas,
@@ -29,10 +29,11 @@ const app = new PIXI.Application({
 app.stage.sortableChildren = true
 app.renderer.plugins.interaction.autoPreventDefault = false;
 
-let spatialHash = new SpatialHash([[0, 0], [1600, 900]], [10, 10])
+let spatialHash = new SpatialHash([[0, 0], [1600, 900]], [100, 100])
 //grid.visualize()
 
 PIXI.Loader.shared.load(setupBalls)
+app.ticker.maxFPS = 30
 app.ticker.add(loop)
 
 function loop(deltaTime) {
@@ -43,14 +44,6 @@ function loop(deltaTime) {
         ball.collide()
     }
 
-    let infectedNum = 0, susceptableNum = 0;
-    for (let ball of balls.children) {
-        if (ball.tint === 0xff0000) infectedNum++
-        else susceptableNum++
-    }
-
-
-    if (susceptableNum) updateChart(infectedNum, susceptableNum)
     stats.end()
 }
 
