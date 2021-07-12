@@ -105,10 +105,20 @@ function updateChart() {
 setInterval(() => chart.update(), 100)
 
 { // UI/UX stuff
-    document.querySelector('#chart-icon').addEventListener('click', (e) => {
+    const chartIcon = document.querySelector('#chart-icon')
+    const settingsIcon = document.querySelector('#settings-icon')
+    const settingsContainer = document.querySelector('#settings-container')
+
+    chartIcon.addEventListener('click', (e) => {
         e.stopPropagation()
+        settingsContainer.classList.add('hidden')
         if (drawer.classList.contains('closed')) drawer.classList.remove('closed')
-        else drawer.classList.add('closed')
+    })
+
+    settingsIcon.addEventListener('click', (e) => {
+        e.stopPropagation()
+        settingsContainer.classList.remove('hidden')
+        if (drawer.classList.contains('closed')) drawer.classList.remove('closed')
     })
 
     window.addEventListener('click', (e) => {

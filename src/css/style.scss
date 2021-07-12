@@ -1,5 +1,6 @@
 @import url(~sanitize.css);
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import './settings';
 
 html {
     overflow: hidden;
@@ -9,7 +10,7 @@ body {
     display: grid;
     height: 100vh;
     place-content: center;
-    background-color: #274754;
+    background: #274754;
     overflow: hidden;
 }
 
@@ -28,6 +29,11 @@ header {
         width: 1.5rem;
         height: 1.5rem;
         margin-left: 1rem;
+        transition: transform 0.15s ease-in-out;
+
+        &:active {
+            transform: scale(1.2);
+        }
     }
 }
 
@@ -45,7 +51,7 @@ header {
     width: 30vw;
     height: 100vh;
     justify-content: center;
-    background-color: #191d38;
+    background-color: #0a0e31;
     transition: transform 0.2s;
 
     &.closed {
@@ -96,7 +102,7 @@ header {
 }
 
 // mobile
-@media (max-width: 767px) and (orientation: landscape) {
+@media (max-width: 812px) and (orientation: landscape) {
     #drawer {
         width: 50vw;
 
@@ -106,14 +112,13 @@ header {
     }
 
     #chart-wrapper {
-        height: 50vw;
+        height: calc(100vh - 3rem);
     }
 }
 
 @media (max-width: 767px) and (orientation: portrait) {
     #drawer {
         height: calc(75vw + 2rem);
-        top: 0;
 
         &.closed {
             transform: translateY(calc(-75vw - 2rem));
