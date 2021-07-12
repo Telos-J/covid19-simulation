@@ -14,7 +14,7 @@ class Ball extends PIXI.Graphics {
             speed * Math.cos(rotation),
             speed * Math.sin(rotation)
         )
-        this.originalColor = Math.random() < 0.0001 ? 0xff0000 : Math.random() * 0x00ffff
+        this.originalColor = Math.random() * 0x00ffff
         this.tint = this.originalColor
         this.beginFill(0xffffff)
         this.arc(0, 0, this.r, 0, Math.PI * 2)
@@ -92,13 +92,14 @@ class Ball extends PIXI.Graphics {
     }
 }
 
-const numBalls = 10000
+const numBalls = 10000, numInfected = 1
 const balls = new PIXI.Container()
 
 function setupBalls() {
     app.stage.addChild(balls);
     for (let i = 0; i < numBalls; i++) {
         const ball = new Ball()
+        if (i < numInfected) ball.tint = 0xff0000
         balls.addChild(ball)
         spatialHash.insert(ball)
     }

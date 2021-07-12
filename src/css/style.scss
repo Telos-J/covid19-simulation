@@ -5,6 +5,7 @@ body {
     display: grid;
     place-content: center;
     background-color: #274754;
+    overflow: hidden;
 }
 
 #sim {
@@ -12,3 +13,33 @@ body {
     aspect-ratio: 16/9;
     border: 1px solid white;
 }
+
+#chart-container {
+    position: absolute;
+    cursor: pointer;
+    top: 50%;
+    right: 0;
+    width: 120px;
+    aspect-ratio: 16/9;
+    border: 1px solid white;
+    background-color: #274754;
+    transform: translate(0, -50%);
+    margin: 10px;
+
+    &.maximized {
+        width: 70vw;
+        right: 50%;
+        transform: translate(50%, -50%);
+        margin: 0px;
+    }
+}
+
+@media (orientation: portrait) {
+    #sim {
+        width: 80vh;
+        aspect-ratio: 16/9;
+        border: 1px solid white;
+        transform: rotate(90deg)
+    }
+}
+
