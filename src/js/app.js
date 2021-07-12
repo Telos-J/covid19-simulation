@@ -43,7 +43,7 @@ function loop(deltaTime) {
         ball.move()
         ball.collide()
     }
-
+    updateChart()
     stats.end()
 }
 
