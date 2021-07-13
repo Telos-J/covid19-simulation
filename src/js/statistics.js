@@ -92,7 +92,7 @@ let frame = 0
 function updateChart() {
     let infectedNum = 0, susceptableNum = 0;
     for (let ball of balls.children) {
-        if (ball.tint === 0xff0000) infectedNum++
+        if (ball.infected) infectedNum++
         else susceptableNum++
     }
     if (susceptableNum) {
