@@ -3,22 +3,23 @@ import { app, spatialHash } from './app'
 import { add, sub, dot, magnitude, scale, normalize } from './vector'
 
 class Ball extends PIXI.Graphics {
-    constructor() {
-        const speed = Math.random() * 2 + 2
-        const rotation = Math.random() * Math.PI * 2
+    constructor(r, x, y, rotation, speed) {
         super()
-        this.r = Math.random() * 10 + 10
-        this.x = Math.random() * (app.screen.width - 2 * this.r) + this.r
-        this.y = Math.random() * (app.screen.height - 2 * this.r) + this.r
+        this.r = r || Math.random() * 5 + 15
+        this.x = x || Math.random() * (app.screen.width - 2 * this.r) + this.r
+        this.y = y || Math.random() * (app.screen.height - 2 * this.r) + this.r
+        this.rotation = rotation || Math.random() * Math.PI * 2
+        this.speed = speed || 2
         this.velocity = new PIXI.Point(
-            speed * Math.cos(rotation),
-            speed * Math.sin(rotation)
+            this.speed * Math.cos(this.rotation),
+            this.speed * Math.sin(this.rotation)
         )
-        this.originalColor = Math.random() < 0.01 ? 0xff0000 : Math.random() * 0x00ffff
+        this.originalColor = Math.random() * 0x00ffff
         this.tint = this.originalColor
         this.beginFill(0xffffff)
         this.arc(0, 0, this.r, 0, Math.PI * 2)
         this.endFill()
+        this.cells = []
     }
 
     get vx() {
@@ -59,25 +60,14 @@ class Ball extends PIXI.Graphics {
     }
 
     collide() {
-        for (let ball of balls.children) {
-            const d = Math.hypot(this.x - ball.x, this.y - ball.y)
-            if (this !== ball && d < this.r + ball.r) {
-                this.bounce(ball)
-                this.contage(ball)
-                break
+        for (let cell of this.cells)
+            for (let ball of cell) {
+                const d = Math.hypot(this.x - ball.x, this.y - ball.y)
+                if (this !== ball && d < this.r + ball.r) {
+                    this.bounce(ball)
+                    this.contage(ball)
+                }
             }
-        }
-
-        // for (let cell of this.cells) {
-        //     for (let ball of cell) {
-        //         const d = Math.hypot(this.x - ball.x, this.y - ball.y)
-        //         if (this !== ball && d < this.r + ball.r) {
-        //             this.bounce(ball)
-        //             this.contage(ball)
-        //             break
-        //         }
-        //     }
-        // }
     }
 
     bounce(ball) {
@@ -101,19 +91,17 @@ class Ball extends PIXI.Graphics {
     }
 }
 
-const numBalls = 1000
+const numBalls = 1000, numInfected = 1
 const balls = new PIXI.Container()
 
 function setupBalls() {
     app.stage.addChild(balls);
     for (let i = 0; i < numBalls; i++) {
         const ball = new Ball()
+        if (i < numInfected) ball.tint = 0xff0000
         balls.addChild(ball)
         spatialHash.insert(ball)
     }
-
-    console.log(spatialHash.cells)
-    spatialHash.visualize()
 }
 
 export { balls, setupBalls }
