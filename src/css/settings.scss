@@ -57,8 +57,8 @@ $field-border-radius: 0.5rem;
 	}
 	.length__title::after {
 		content: attr(data-length);
-		position: absolute;
-		right: -16px;
+		position: relative;
+		right: -0.5rem;
 		font-variant-numeric: tabular-nums;
 		color: #fff;
 	}
@@ -71,7 +71,7 @@ $range-handle-size: 20px !default;
 $range-track-color: rgba(255, 255, 255, 0.314) !default;
 $range-track-height: 2px !default;
 
-$range-label-width: 5rem !default;
+$range-label-width: 8rem !default;
 
 .slider {
 	-webkit-appearance: none;

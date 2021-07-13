@@ -5,7 +5,7 @@ Chart.defaults.color = '#fff'
 Chart.defaults.font.family = 'Montserrat'
 Chart.defaults.font.style = 'italic'
 
-const labels = []
+let labels = []
 
 const infected = {
     label: 'Infected',
@@ -83,7 +83,7 @@ const config = {
     }
 }
 
-const chart = new Chart(
+let chart = new Chart(
     document.getElementById('chart'),
     config
 )
@@ -100,6 +100,14 @@ function updateChart() {
         infected.data.push(infectedNum)
         susceptable.data.push(susceptableNum)
     }
+    console.log(labels)
+}
+
+function resetChart() {
+    frame = 0
+    labels.length = 0
+    infected.data.length = 0
+    susceptable.data.length = 0
 }
 
 setInterval(() => chart.update(), 100)
@@ -127,4 +135,4 @@ setInterval(() => chart.update(), 100)
     })
 }
 
-export { updateChart }
+export { updateChart, resetChart }

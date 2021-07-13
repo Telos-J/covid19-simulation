@@ -17,7 +17,7 @@ PIXI.utils.sayHello(type)
 
 const stats = new Stats()
 stats.showPanel(0)
-//document.body.appendChild(stats.dom)
+document.body.appendChild(stats.dom)
 
 const app = new PIXI.Application({
     view: canvas,
@@ -36,6 +36,8 @@ let spatialHash = new SpatialHash([[0, 0], [1600, 900]], [100, 100])
 PIXI.Loader.shared.load(setupBalls)
 app.ticker.maxFPS = 30
 app.ticker.add(loop)
+
+const sliderValue = document.querySelector(".length__title");
 
 function loop(deltaTime) {
     stats.begin()
