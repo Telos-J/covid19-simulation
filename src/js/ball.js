@@ -3,22 +3,21 @@ import { app, spatialHash } from './app'
 import { add, sub, dot, magnitude, scale, normalize } from './vector'
 
 class Ball extends PIXI.Graphics {
-    constructor(r, x, y, rotation, speed) {
+    constructor(r, x, y, speed) {
+        const rotation = Math.random() * Math.PI * 2
         super()
-        this.r = r || Math.random() * 5 + 15
+        this.r = r || Math.random() * 5 + 5
         this.x = x || Math.random() * (app.screen.width - 2 * this.r) + this.r
         this.y = y || Math.random() * (app.screen.height - 2 * this.r) + this.r
-        this.rotation = rotation || Math.random() * Math.PI * 2
         this.speed = speed || 2
         this.velocity = new PIXI.Point(
-            this.speed * Math.cos(this.rotation),
-            this.speed * Math.sin(this.rotation)
+            this.speed * Math.cos(rotation),
+            this.speed * Math.sin(rotation)
         )
         this.originalColor = Math.random() * 0x00ffff
-        this.tint = this.originalColor
-        this.beginFill(0xffffff)
-        this.arc(0, 0, this.r, 0, Math.PI * 2)
-        this.endFill()
+        this.infected = false
+        this.hasMask = true
+        this.color(this.originalColor)
         this.cells = []
     }
 
@@ -38,6 +37,21 @@ class Ball extends PIXI.Graphics {
         this.velocity.y = val
     }
 
+    color(color) {
+        this.clear()
+        if (this.hasMask) {
+            this.beginFill(0xffffff)
+            this.arc(0, 0, this.r, 0, Math.PI)
+            this.endFill()
+            this.beginFill(color)
+            this.arc(0, 0, this.r, Math.PI, Math.PI * 2)
+            this.endFill()
+        } else {
+            this.beginFill(color)
+            this.arc(0, 0, this.r, 0, Math.PI * 2)
+            this.endFill()
+        }
+    }
 
     move() {
         this.position = add(this.position, this.velocity)
@@ -66,6 +80,7 @@ class Ball extends PIXI.Graphics {
                 if (this !== ball && d < this.r + ball.r) {
                     this.bounce(ball)
                     this.contage(ball)
+                    break;
                 }
             }
     }
@@ -84,21 +99,35 @@ class Ball extends PIXI.Graphics {
     }
 
     contage(ball) {
-        if ((this.tint === 0xff0000 || ball.tint === 0xff0000) && Math.random() < 0.23) {
-            this.tint = 0xff0000
-            ball.tint = 0xff0000
+        if (this.infected) {
+            const r = this.hasMask ? 0.23 * 0.3 : 0.23
+            if (Math.random() < r) {
+                ball.infected = true
+                ball.color(0xff0000)
+            }
+
+        } else if (ball.infected) {
+            const r = ball.hasMask ? 0.23 * 0.01 : 0.23
+            if (Math.random() < r) {
+                this.infected = true
+                this.color(0xff0000)
+            }
+
         }
     }
 }
 
-const numBalls = 1000, numInfected = 1
+const numBalls = 5000, numInfected = 1
 const balls = new PIXI.Container()
 
 function setupBalls() {
     app.stage.addChild(balls);
     for (let i = 0; i < numBalls; i++) {
         const ball = new Ball()
-        if (i < numInfected) ball.tint = 0xff0000
+        if (i < numInfected) {
+            ball.infected = true
+            ball.color(0xff0000)
+        }
         balls.addChild(ball)
         spatialHash.insert(ball)
     }
