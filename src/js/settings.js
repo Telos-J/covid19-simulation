@@ -1,6 +1,6 @@
 import { balls, setupBalls } from './ball'
 import { spatialHash } from './app'
-import { resetChart } from './statistics'
+import { resetChart } from './chart'
 
 const sliderProps = {
     fill: "#0B1EDF",
@@ -26,10 +26,10 @@ slider.querySelector("input").addEventListener("input", event => {
 
 function reset() {
     balls.removeChildren()
-    spatialHash.resetHash([[0, 0], [1600, 900]], [100, 100])
+    spatialHash.resetHash()
     const maskProb = parseInt(sliderValue.getAttribute('data-length')) / 100
     setupBalls(maskProb)
-    resetChart()
+    //resetChart()
 }
 
 document.querySelector('.btn').addEventListener('click', reset)

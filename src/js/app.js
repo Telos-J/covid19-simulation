@@ -6,7 +6,7 @@ import '../css/style.scss'
 import './settings'
 import { SpatialHash } from './spatialhash'
 import { balls, setupBalls } from './ball'
-import { updateChart } from './statistics'
+import { updateChart } from './chart'
 import * as PIXI from 'pixi.js'
 import * as Stats from 'stats.js'
 
@@ -30,8 +30,8 @@ const app = new PIXI.Application({
 app.stage.sortableChildren = true
 app.renderer.plugins.interaction.autoPreventDefault = false;
 
-let spatialHash = new SpatialHash([[0, 0], [1600, 900]], [100, 100])
-//grid.visualize()
+let spatialHash = new SpatialHash([[0, 0], [1600, 900]], [25, 25])
+//spatialHash.visualize()
 
 PIXI.Loader.shared.load(setupBalls)
 app.ticker.maxFPS = 30

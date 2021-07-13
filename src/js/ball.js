@@ -41,10 +41,10 @@ class Ball extends PIXI.Graphics {
         this.clear()
         if (this.hasMask) {
             this.beginFill(0xffffff)
-            this.arc(0, 0, this.r, 0, Math.PI)
+            this.arc(0, 0, this.r, 0, Math.PI * 2)
             this.endFill()
             this.beginFill(color)
-            this.arc(0, 0, this.r, Math.PI, Math.PI * 2)
+            this.arc(0, 0, this.r / 2, 0, Math.PI * 2)
             this.endFill()
         } else {
             this.beginFill(color)

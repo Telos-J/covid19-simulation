@@ -10,7 +10,7 @@ let labels = []
 const infected = {
     label: 'Infected',
     backgroundColor: 'rgb(255, 99, 132)',
-    borderColor: 'rgb(255, 99, 132)',
+    borderWidth: 0,
     data: [],
     fill: true,
     radius: 0,
@@ -20,7 +20,7 @@ const infected = {
 const susceptable = {
     label: 'Susceptable',
     backgroundColor: 'rgb(99, 255, 132)',
-    borderColor: 'rgb(99, 255, 132)',
+    borderWidth: 0,
     data: [],
     fill: true,
     radius: 0,
@@ -89,18 +89,19 @@ let chart = new Chart(
 )
 
 let frame = 0
+let finished = false
 function updateChart() {
     let infectedNum = 0, susceptableNum = 0;
     for (let ball of balls.children) {
         if (ball.infected) infectedNum++
         else susceptableNum++
     }
-    if (susceptableNum) {
+    if (!finished) {
         labels.push(frame++)
         infected.data.push(infectedNum)
         susceptable.data.push(susceptableNum)
     }
-    console.log(labels)
+    if (!susceptableNum) finished = true
 }
 
 function resetChart() {
