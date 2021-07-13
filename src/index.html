@@ -25,7 +25,27 @@
 </head>
 
 <body>
+    <header>
+        <img id="settings-icon" src="img/settings.svg" alt="line chart">
+        <img id="chart-icon" src="img/line-chart.svg" alt="line chart">
+    </header>
     <canvas id="sim"></canvas>
+    <div id="drawer" class="closed">
+        <div id="chart-wrapper"><canvas id="chart"></canvas></div>
+        <div id="settings-container">
+            <div class="length range__slider" data-min="4" data-max="32">
+            <div class="length__title field-title" data-length='0'># of balls:</div>
+            <input class="slider" type="range" min="4" max="32" value="16" />
+        </div>
+        <div class="settings">
+            <span class="settings__title field-title">settings</span>
+            <div class="setting">
+                <input type="checkbox" id="uppercase" checked />
+                <label for="uppercase">Plot Graph</label>
+            </div>
+        </div>
+	    <button class="btn">Run Simulation</button>
+    </div>
 </body>
 
 </html>
