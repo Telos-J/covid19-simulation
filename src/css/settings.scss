@@ -1,0 +1,210 @@
+#settings-container {
+    position: absolute;
+	width: 100%;
+	height: 100%;
+	padding: 3rem 2rem;
+	background: #0a0e31;
+	font-family: 'Montserrat';
+    font-style: italic;
+	color: white;
+
+    &.hidden {
+        display: none;
+    }
+}
+
+$field-color: rgba(255, 255, 255, 0.08);
+$field-height: 65px;
+$field-border-radius: 0.5rem;
+
+.field-title {
+	position: absolute;
+	top: -1rem;
+	left: 0.5rem;
+	transform: translateY(-50%);
+	font-weight: 800;
+	text-transform: uppercase;
+	font-size: 0.65rem;
+	pointer-events: none;
+	user-select: none;
+}
+
+.range__slider {
+	position: relative;
+	width: 100%;
+	height: calc(#{$field-height} - 10px);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: $field-color;
+	border-radius: $field-border-radius;
+	margin: 3rem 0;
+
+	&::before,
+	&::after {
+		position: absolute;
+		color: #fff;
+		font-size: 0.9rem;
+		font-weight: bold;
+	}
+	&::before {
+		content: attr(data-min);
+		left: 1rem;
+	}
+	&::after {
+		content: attr(data-max);
+		right: 1rem;
+	}
+	.length__title::after {
+		content: attr(data-length);
+		position: absolute;
+		right: -16px;
+		font-variant-numeric: tabular-nums;
+		color: #fff;
+	}
+}
+
+$range-handle-color: rgb(255, 255, 255) !default;
+$range-handle-color-hover: rgb(212, 212, 212) !default;
+$range-handle-size: 20px !default;
+
+$range-track-color: rgba(255, 255, 255, 0.314) !default;
+$range-track-height: 2px !default;
+
+$range-label-width: 5rem !default;
+
+.slider {
+	-webkit-appearance: none;
+	width: calc(100% - (#{$range-label-width}));
+	height: $range-track-height;
+	border-radius: 5px;
+	background: $range-track-color;
+	outline: none;
+	padding: 0;
+	margin: 0;
+	cursor: pointer;
+
+	// Range Handle
+	&::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		width: $range-handle-size;
+		height: $range-handle-size;
+		border-radius: 50%;
+		background: $range-handle-color;
+		cursor: pointer;
+		transition: all 0.15s ease-in-out;
+		&:hover {
+			background: $range-handle-color-hover;
+			transform: scale(1.2);
+		}
+	}
+	&::-moz-range-thumb {
+		width: $range-handle-size;
+		height: $range-handle-size;
+		border: 0;
+		border-radius: 50%;
+		background: $range-handle-color;
+		cursor: pointer;
+		transition: background 0.15s ease-in-out;
+		&:hover {
+			background: $range-handle-color-hover;
+		}
+	}
+}
+
+.settings {
+	position: relative;
+	height: auto;
+	widows: 100%;
+	display: flex;
+	flex-direction: column;
+
+	.setting {
+		position: relative;
+		width: 100%;
+		height: calc(#{$field-height} - 10px);
+		background: $field-color;
+		border-radius: $field-border-radius;
+		display: flex;
+		align-items: center;
+		padding: 10px 25px;
+		color: #fff;
+		margin-bottom: 8px;
+		input {
+			opacity: 0;
+			position: absolute;
+			+ label {
+				user-select: none;
+				&::before,
+				&::after {
+					content: "";
+					position: absolute;
+					transition: 150ms cubic-bezier(0.24, 0, 0.5, 1);
+					transform: translateY(-50%);
+					top: 50%;
+					right: 10px;
+					cursor: pointer;
+				}
+				&::before {
+					height: 30px;
+					width: 50px;
+					border-radius: 30px;
+					background: rgba(214, 214, 214, 0.434);
+				}
+				&::after {
+					height: 24px;
+					width: 24px;
+					border-radius: 60px;
+					right: 32px;
+					background: #fff;
+				}
+			}
+			&:checked {
+				& + label:before {
+					background: #5d68e2;
+					transition: all 150ms cubic-bezier(0, 0, 0, 0.1);
+				}
+				& + label:after {
+					right: 14px;
+				}
+			}
+			&:focus {
+				+ label:before {
+					box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.75);
+				}
+			}
+			&:disabled{
+				+ label{
+					&:before, &:after{ cursor: not-allowed }
+					&:before{ background: #4f4f6a }
+					&:after{ background: #909090 }
+				}
+			}
+		}
+	}
+}
+
+.btn {
+	user-select: none;
+	position: absolute;
+	width: calc(100% - 4rem);
+	height: 50px;
+    bottom: 3rem;
+	margin: 10px 0;
+	border-radius: $field-border-radius;
+	color: #fff;
+	border: none;
+	background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	letter-spacing: 1px;
+	font-weight: bold;
+	text-transform: uppercase;
+    font-style: italic;
+	cursor: pointer;
+	transition: all 150ms ease;
+	&:active {
+		transform: translateY(3%);
+		box-shadow: 0 4px 8px rgba(255, 255, 255, 0.08);
+	}
+}
+
+

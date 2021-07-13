@@ -1,6 +1,9 @@
 import { Chart, registerables } from 'chart.js';
+import { balls } from './ball'
 Chart.register(...registerables);
 Chart.defaults.color = '#fff'
+Chart.defaults.font.family = 'Montserrat'
+Chart.defaults.font.style = 'italic'
 
 const labels = []
 
@@ -35,7 +38,8 @@ const config = {
     options: {
         responsive: true,
         animation: false,
-        aspectRatio: 16 / 9,
+        //aspectRatio: 4 / 3,
+        maintainAspectRatio: false,
         interaction: {
             mode: 'nearest',
             axis: 'x',
@@ -43,37 +47,38 @@ const config = {
         },
         plugins: {
             legend: {
-                display: false,
+                display: true,
+                position: 'bottom'
             },
             title: {
-                display: false,
+                display: true,
+                padding: 20,
                 text: 'Real-time data of Covid19 Simulation'
             },
         },
         scales: {
             x: {
-                display: false,
+                display: true,
                 title: {
+                    display: false,
                     text: 'Time'
                 }
             },
             y: {
                 stacked: true,
                 title: {
-                    display: false,
+                    display: true,
                     text: 'Number of humans'
                 },
                 ticks: {
-                    min: 0,
-                    max: 100000,
                     callback: function(value) {
-                        return `${Math.floor(value / 1000)}k`
+                        return value < 1000 ? value : `${Math.floor(value / 1000)}k`
                     }
                 },
             }
         },
         layout: {
-            padding: 0
+            padding: 20
         }
     }
 }
@@ -84,38 +89,42 @@ const chart = new Chart(
 )
 
 let frame = 0
-function updateChart(infectedNum, susceptableNum) {
-    labels.push(frame++)
-    infected.data.push(infectedNum)
-    susceptable.data.push(susceptableNum)
+function updateChart() {
+    let infectedNum = 0, susceptableNum = 0;
+    for (let ball of balls.children) {
+        if (ball.tint === 0xff0000) infectedNum++
+        else susceptableNum++
+    }
+    if (susceptableNum) {
+        labels.push(frame++)
+        infected.data.push(infectedNum)
+        susceptable.data.push(susceptableNum)
+    }
 }
 
 setInterval(() => chart.update(), 100)
-window.addEventListener('click', (e) => {
-    const chartContainer = chart.canvas.parentNode
-    const rect = chartContainer.getBoundingClientRect()
-    if ((e.clientX < rect.x || e.clientX > rect.right || e.clientY < rect.y || e.clientY > rect.bottom) &&
-        chartContainer.classList.contains('maximized')) {
-        chartContainer.classList.remove('maximized')
-        config.options.plugins.legend.display = false
-        config.options.plugins.title.display = false
-        config.options.scales.x.display = false
-        config.options.scales.y.title.display = false
-        config.options.layout.padding = 0
-    }
-    if ((e.clientX > rect.x && e.clientX < rect.right && e.clientY > rect.y && e.clientY < rect.bottom) &&
-        !chartContainer.classList.contains('maximized')) {
-        chartContainer.classList.add('maximized')
-        if (window.innerWidth > 768) {
-            config.options.plugins.legend.display = true
-            config.options.plugins.title.display = true
-            config.options.scales.x.display = true
-            config.options.scales.y.title.display = true
-            config.options.layout.padding = 20
-        }
-    }
 
-    console.log(window.innerWidth)
-})
+{ // UI/UX stuff
+    const chartIcon = document.querySelector('#chart-icon')
+    const settingsIcon = document.querySelector('#settings-icon')
+    const settingsContainer = document.querySelector('#settings-container')
+
+    chartIcon.addEventListener('click', (e) => {
+        e.stopPropagation()
+        settingsContainer.classList.add('hidden')
+        if (drawer.classList.contains('closed')) drawer.classList.remove('closed')
+    })
+
+    settingsIcon.addEventListener('click', (e) => {
+        e.stopPropagation()
+        settingsContainer.classList.remove('hidden')
+        if (drawer.classList.contains('closed')) drawer.classList.remove('closed')
+    })
+
+    window.addEventListener('click', (e) => {
+        const rect = drawer.getBoundingClientRect()
+        if (!drawer.classList.contains('closed') && (e.clientX < rect.left || e.clientY > rect.bottom)) drawer.classList.add('closed')
+    })
+}
 
 export { updateChart }
