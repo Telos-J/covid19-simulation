@@ -6,7 +6,7 @@ class Ball extends PIXI.Graphics {
     constructor(maskProb = 0) {
         const rotation = Math.random() * Math.PI * 2
         super()
-        this.r = Math.random() * 5 + 5
+        this.r = Math.random() * 10 + 5
         this.x = Math.random() * (app.screen.width - 2 * this.r) + this.r
         this.y = Math.random() * (app.screen.height - 2 * this.r) + this.r
         this.speed = 2
@@ -74,13 +74,14 @@ class Ball extends PIXI.Graphics {
     }
 
     collide() {
+        loop:
         for (let cell of this.cells)
             for (let ball of cell) {
                 const d = Math.hypot(this.x - ball.x, this.y - ball.y)
                 if (this !== ball && d < this.r + ball.r && this.condition !== 'dead' && ball.condition !== 'dead') {
                     this.bounce(ball)
                     this.contage(ball)
-                    break;
+                    break loop;
                 }
             }
     }
@@ -124,6 +125,7 @@ class Ball extends PIXI.Graphics {
             if (Math.random() < 0.2) {
                 this.condition = 'dead'
                 this.color(0x000000)
+                this.zIndex = -1
             } else {
                 this.condition = 'recovered'
                 this.color(this.originalColor)
@@ -132,8 +134,9 @@ class Ball extends PIXI.Graphics {
     }
 }
 
-const numBalls = 5000, numInfected = 1
+const numBalls = 1000, numInfected = 1
 const balls = new PIXI.Container()
+balls.sortableChildren = true
 
 function setupBalls(maskProb) {
     if (!app.stage.children.length) app.stage.addChild(balls);
