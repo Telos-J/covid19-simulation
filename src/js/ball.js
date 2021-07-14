@@ -3,10 +3,10 @@ import { app, spatialHash } from './app'
 import { add, sub, dot, magnitude, scale, normalize } from './vector'
 
 class Ball extends PIXI.Graphics {
-    constructor(maskProb = 0) {
+    constructor(maskProb) {
         const rotation = Math.random() * Math.PI * 2
         super()
-        this.r = Math.random() * 10 + 5
+        this.r = Math.random() * 5 + 5
         this.x = Math.random() * (app.screen.width - 2 * this.r) + this.r
         this.y = Math.random() * (app.screen.height - 2 * this.r) + this.r
         this.speed = 2
@@ -110,8 +110,8 @@ class Ball extends PIXI.Graphics {
                 ball.color(0xff0000)
             }
         } else if (ball.condition === 'infected' && this.condition === 'susceptable') {
-            if (this.hasMask) r *= 0.3
-            if (ball.hasMask) r *= 0.01
+            if (ball.hasMask) r *= 0.3
+            if (this.hasMask) r *= 0.01
             if (Math.random() < r) {
                 this.condition = 'infected'
                 this.infectedFrame = app.ticker.frame
@@ -122,9 +122,9 @@ class Ball extends PIXI.Graphics {
 
     updateCondition() {
         if (this.condition === 'infected' && app.ticker.frame - this.infectedFrame > 200) {
-            if (Math.random() < 0.2) {
+            if (Math.random() < fatality) {
                 this.condition = 'dead'
-                this.color(0x000000)
+                this.tint = 0x000000
                 this.zIndex = -1
             } else {
                 this.condition = 'recovered'
@@ -134,15 +134,17 @@ class Ball extends PIXI.Graphics {
     }
 }
 
-const numBalls = 1000, numInfected = 1
+let numBalls = 5000, fatality
 const balls = new PIXI.Container()
 balls.sortableChildren = true
 
-function setupBalls(maskProb) {
+function setupBalls(maskProb, fatalityProb) {
     if (!app.stage.children.length) app.stage.addChild(balls);
+    fatality = fatalityProb
+    console.log(maskProb, fatalityProb)
     for (let i = 0; i < numBalls; i++) {
         const ball = new Ball(maskProb)
-        if (i < numInfected) {
+        if (i === 0) {
             ball.condition = 'infected'
             ball.infectedFrame = 0
             ball.color(0xff0000)

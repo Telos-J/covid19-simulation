@@ -29,6 +29,10 @@ for (let rangeSlider of rangeSliders) {
     });
 }
 
+function getValue(id) {
+    return parseInt(document.querySelector(`#${id} .length__title`).getAttribute('data-length')) / 100
+}
+
 ////////////
 // Switch //
 ////////////
@@ -43,7 +47,10 @@ function reset() {
     app.ticker.frame = 0
     balls.removeChildren()
     spatialHash.resetHash()
-    setupBalls(parseInt(document.querySelector('#mask-slider .length__title').getAttribute('data-length')) / 100)
+    setupBalls(
+        getValue('mask-slider'),
+        getValue('fatality-slider')
+    )
     if (!stackSwitch.checked) resetChart()
 }
 

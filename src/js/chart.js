@@ -139,17 +139,17 @@ setInterval(() => chart.update(), 100)
 { // UI/UX stuff
     const chartIcon = document.querySelector('#chart-icon')
     const settingsIcon = document.querySelector('#settings-icon')
-    const settingsContainer = document.querySelector('#settings-container')
+    const settingsWrapper = document.querySelector('#settings-wrapper')
 
     chartIcon.addEventListener('click', (e) => {
         e.stopPropagation()
-        settingsContainer.classList.add('hidden')
+        settingsWrapper.classList.add('hidden')
         if (drawer.classList.contains('closed')) drawer.classList.remove('closed')
     })
 
     settingsIcon.addEventListener('click', (e) => {
         e.stopPropagation()
-        settingsContainer.classList.remove('hidden')
+        settingsWrapper.classList.remove('hidden')
         if (drawer.classList.contains('closed')) drawer.classList.remove('closed')
     })
 

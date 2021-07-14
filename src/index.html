@@ -32,10 +32,15 @@
     <canvas id="sim"></canvas>
     <div id="drawer" class="closed">
         <div id="chart-wrapper"><canvas id="chart"></canvas></div>
+        <div id="settings-wrapper">
         <div id="settings-container">
             <div id="mask-slider" class="range__slider" data-min="0" data-max="100">
                 <div class="length__title field-title" data-length='0'>% of masks:</div>
                 <input class="slider" type="range" min="0" max="100" value="0" />
+            </div>
+            <div id="fatality-slider" class="range__slider" data-min="0" data-max="100">
+                <div class="length__title field-title" data-length='0'>% of fatality:</div>
+                <input class="slider" type="range" min="0" max="100" value="20" />
             </div>
             <div class="settings">
                 <span class="settings__title field-title">settings</span>
@@ -44,7 +49,8 @@
                     <label for="stack">Stack Graph</label>
                 </div>
             </div>
-	        <button class="btn">Run Simulation</button>
+        </div>
+	    <button class="btn">Run Simulation</button>
         </div>
     </div>
 </body>
