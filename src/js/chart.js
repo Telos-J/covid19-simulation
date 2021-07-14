@@ -1,5 +1,6 @@
 import { Chart, registerables } from 'chart.js';
 import { balls } from './ball'
+import { app } from './app'
 Chart.register(...registerables);
 Chart.defaults.color = '#fff'
 Chart.defaults.font.family = 'Montserrat'
@@ -27,14 +28,35 @@ const susceptable = {
     tension: 0.4
 }
 
+const dead = {
+    label: 'Dead',
+    backgroundColor: 'rgb(0, 0, 0)',
+    borderWidth: 0,
+    data: [],
+    fill: true,
+    radius: 0,
+    tension: 0.4
+}
+
+const recovered = {
+    label: 'Recovered',
+    backgroundColor: 'rgb(107, 76, 154)',
+    borderWidth: 0,
+    data: [],
+    fill: true,
+    radius: 0,
+    tension: 0.4
+}
+
 const data = {
     labels: labels,
-    datasets: [infected, susceptable]
+    datasets: [infected, susceptable, dead, recovered]
 }
 
 const config = {
     type: 'line',
     data: data,
+    finished: false,
     options: {
         responsive: true,
         animation: false,
@@ -80,7 +102,7 @@ const config = {
         layout: {
             padding: 20
         }
-    }
+    },
 }
 
 let chart = new Chart(
@@ -88,20 +110,22 @@ let chart = new Chart(
     config
 )
 
-let frame = 0
-let finished = false
 function updateChart() {
-    let infectedNum = 0, susceptableNum = 0;
+    let susceptableNum = 0, infectedNum = 0, deadNum = 0, recoveredNum = 0;
     for (let ball of balls.children) {
-        if (ball.infected) infectedNum++
-        else susceptableNum++
+        if (ball.condition === 'susceptable') susceptableNum++
+        else if (ball.condition === 'infected') infectedNum++
+        else if (ball.condition === 'dead') deadNum++
+        else if (ball.condition === 'recovered') recoveredNum++
     }
-    if (!finished) {
-        labels.push(frame++)
+    if (!chart.config.finished) {
+        labels.push(app.ticker.frame)
         infected.data.push(infectedNum)
         susceptable.data.push(susceptableNum)
+        dead.data.push(deadNum)
+        recovered.data.push(recoveredNum)
     }
-    if (!susceptableNum) finished = true
+    chart.config.finished = infectedNum === 0
 }
 
 function resetChart() {

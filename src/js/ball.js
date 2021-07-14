@@ -14,8 +14,8 @@ class Ball extends PIXI.Graphics {
             this.speed * Math.cos(rotation),
             this.speed * Math.sin(rotation)
         )
-        this.originalColor = Math.random() * 0x00ffff
-        this.infected = false
+        this.originalColor = PIXI.utils.rgb2hex([0, Math.random() * 0.8 + 0.2, Math.random() * 0.8 + 0.2])
+        this.condition = 'susceptable'
         this.hasMask = Math.random() < maskProb
         this.color(this.originalColor)
         this.cells = []
@@ -77,7 +77,7 @@ class Ball extends PIXI.Graphics {
         for (let cell of this.cells)
             for (let ball of cell) {
                 const d = Math.hypot(this.x - ball.x, this.y - ball.y)
-                if (this !== ball && d < this.r + ball.r) {
+                if (this !== ball && d < this.r + ball.r && this.condition !== 'dead' && ball.condition !== 'dead') {
                     this.bounce(ball)
                     this.contage(ball)
                     break;
@@ -99,20 +99,35 @@ class Ball extends PIXI.Graphics {
     }
 
     contage(ball) {
-        if (this.infected) {
-            const r = this.hasMask ? 0.23 * 0.3 : 0.23
+        let r = 0.23
+        if (this.condition === 'infected' && ball.condition === 'susceptable') {
+            if (this.hasMask) r *= 0.3
+            if (ball.hasMask) r *= 0.01
             if (Math.random() < r) {
-                ball.infected = true
+                ball.condition = 'infected'
+                ball.infectedFrame = app.ticker.frame
                 ball.color(0xff0000)
             }
-
-        } else if (ball.infected) {
-            const r = ball.hasMask ? 0.23 * 0.01 : 0.23
+        } else if (ball.condition === 'infected' && this.condition === 'susceptable') {
+            if (this.hasMask) r *= 0.3
+            if (ball.hasMask) r *= 0.01
             if (Math.random() < r) {
-                this.infected = true
+                this.condition = 'infected'
+                this.infectedFrame = app.ticker.frame
                 this.color(0xff0000)
             }
+        }
+    }
 
+    updateCondition() {
+        if (this.condition === 'infected' && app.ticker.frame - this.infectedFrame > 200) {
+            if (Math.random() < 0.2) {
+                this.condition = 'dead'
+                this.color(0x000000)
+            } else {
+                this.condition = 'recovered'
+                this.color(this.originalColor)
+            }
         }
     }
 }
@@ -125,7 +140,8 @@ function setupBalls(maskProb) {
     for (let i = 0; i < numBalls; i++) {
         const ball = new Ball(maskProb)
         if (i < numInfected) {
-            ball.infected = true
+            ball.condition = 'infected'
+            ball.infectedFrame = 0
             ball.color(0xff0000)
         }
         balls.addChild(ball)

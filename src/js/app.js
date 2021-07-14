@@ -35,19 +35,21 @@ let spatialHash = new SpatialHash([[0, 0], [1600, 900]], [25, 25])
 
 PIXI.Loader.shared.load(setupBalls)
 app.ticker.maxFPS = 30
+app.ticker.frame = 0
 app.ticker.add(loop)
-
-const sliderValue = document.querySelector(".length__title");
 
 function loop(deltaTime) {
     stats.begin()
     for (let ball of balls.children) {
+        if (ball.condition === 'dead') continue
         spatialHash.update(ball)
         ball.move()
         ball.collide()
+        ball.updateCondition()
     }
     updateChart()
     stats.end()
+    app.ticker.frame++
 }
 
 export { app, spatialHash }
