@@ -2,35 +2,49 @@ import { balls, setupBalls } from './ball'
 import { app, spatialHash } from './app'
 import { resetChart } from './chart'
 
+////////////
+// Slider //
+////////////
+
 const sliderProps = {
     fill: "#0B1EDF",
     background: "rgba(255, 255, 255, 0.214)",
 };
 
-const slider = document.querySelector(".range__slider");
-const sliderValue = document.querySelector(".length__title");
+const rangeSliders = document.querySelectorAll('.range__slider')
 
-function applyFill(slider) {
+function updateSlider(rangeSlider) {
+    const slider = rangeSlider.querySelector('.slider')
     const percentage = (100 * (slider.value - slider.min)) / (slider.max - slider.min);
     const bg = `linear-gradient(90deg, ${sliderProps.fill} ${percentage}%, ${sliderProps.background} ${percentage + 0.1}%)`;
+    const sliderValue = rangeSlider.querySelector(".length__title");
     slider.style.background = bg;
     sliderValue.setAttribute("data-length", slider.value);
 }
 
-applyFill(slider.querySelector("input"));
+for (let rangeSlider of rangeSliders) {
+    updateSlider(rangeSlider);
+    rangeSlider.addEventListener("input", event => {
+        updateSlider(event.target.parentNode);
+    });
+}
 
-slider.querySelector("input").addEventListener("input", event => {
-    sliderValue.setAttribute("data-length", event.target.value);
-    applyFill(event.target);
-});
+////////////
+// Switch //
+////////////
+
+const stackSwitch = document.querySelector('#stack')
+
+////////////
+// Button //
+////////////
 
 function reset() {
     app.ticker.frame = 0
     balls.removeChildren()
     spatialHash.resetHash()
-    const maskProb = parseInt(sliderValue.getAttribute('data-length')) / 100
-    setupBalls(maskProb)
-    //resetChart()
+    setupBalls(parseInt(document.querySelector('#mask-slider .length__title').getAttribute('data-length')) / 100)
+    if (!stackSwitch.checked) resetChart()
 }
 
 document.querySelector('.btn').addEventListener('click', reset)

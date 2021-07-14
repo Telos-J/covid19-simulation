@@ -33,15 +33,15 @@
     <div id="drawer" class="closed">
         <div id="chart-wrapper"><canvas id="chart"></canvas></div>
         <div id="settings-container">
-            <div class="length range__slider" data-min="0" data-max="100">
+            <div id="mask-slider" class="range__slider" data-min="0" data-max="100">
                 <div class="length__title field-title" data-length='0'>% of masks:</div>
-                <input class="slider" type="range" min="0" max="100" value="50" />
+                <input class="slider" type="range" min="0" max="100" value="0" />
             </div>
             <div class="settings">
                 <span class="settings__title field-title">settings</span>
                 <div class="setting">
-                    <input type="checkbox" id="uppercase" checked />
-                    <label for="uppercase">Plot Graph</label>
+                    <input type="checkbox" id="stack" checked />
+                    <label for="stack">Stack Graph</label>
                 </div>
             </div>
 	        <button class="btn">Run Simulation</button>

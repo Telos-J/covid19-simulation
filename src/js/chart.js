@@ -129,7 +129,6 @@ function updateChart() {
 }
 
 function resetChart() {
-    frame = 0
     labels.length = 0
     infected.data.length = 0
     susceptable.data.length = 0
