@@ -132,6 +132,8 @@ function resetChart() {
     labels.length = 0
     infected.data.length = 0
     susceptable.data.length = 0
+    dead.data.length = 0
+    recovered.data.length = 0
 }
 
 setInterval(() => chart.update(), 100)
