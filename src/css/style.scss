@@ -83,22 +83,22 @@ header {
 // tablet
 @media (max-width: 1366px) and (orientation: landscape) {
     #chart-wrapper {
-        height: 30vw;
+        height: 50vw;
     }
 }
 
 @media (max-width: 1366px) and (orientation: portrait) {
     #drawer {
-        height: calc(30vw + 2rem);
+        height: calc(50vw + 2rem);
 
         &.closed {
-            transform: translateY(calc(-30vw - 2rem));
+            transform: translateY(calc(-50vw - 2rem));
         }
     }
 
     #chart-wrapper {
-        width: 50%;
-        height: 30vw;
+        width: 50vw;
+        height: 50vw;
     }
 }
 
@@ -127,7 +127,7 @@ header {
     }
 
     #chart-wrapper {
-        width: 100%;
+        width: 50vw;
         height: 90vw;
     }
 }
