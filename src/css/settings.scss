@@ -1,15 +1,28 @@
-#settings-container {
+#settings-wrapper {
     position: absolute;
-	width: 100%;
-	height: 100%;
-	padding: 3rem 2rem;
-	background: #0a0e31;
-	font-family: 'Montserrat';
-    font-style: italic;
-	color: white;
+    width: 100%;
+    height: 100%;
+    padding: 3.5rem 2rem 5rem 2rem;
+    background: #0a0e31;
 
     &.hidden {
         display: none;
+    }
+}
+
+#settings-container {
+    position: absolute;
+	width: calc(100% - 4rem);
+	height: calc(100% - 8.5rem);
+	font-family: 'Montserrat';
+    font-style: italic;
+	color: white;
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+
+    &::-webkit-scrollbar {
+      display: none;
     }
 }
 
@@ -38,7 +51,7 @@ $field-border-radius: 0.5rem;
 	align-items: center;
 	background: $field-color;
 	border-radius: $field-border-radius;
-	margin: 3rem 0;
+	margin: 2.5rem 0;
 
 	&::before,
 	&::after {
@@ -57,8 +70,8 @@ $field-border-radius: 0.5rem;
 	}
 	.length__title::after {
 		content: attr(data-length);
-		position: absolute;
-		right: -16px;
+		position: relative;
+		right: -0.5rem;
 		font-variant-numeric: tabular-nums;
 		color: #fff;
 	}
@@ -71,7 +84,7 @@ $range-handle-size: 20px !default;
 $range-track-color: rgba(255, 255, 255, 0.314) !default;
 $range-track-height: 2px !default;
 
-$range-label-width: 5rem !default;
+$range-label-width: 8rem !default;
 
 .slider {
 	-webkit-appearance: none;
@@ -187,24 +200,38 @@ $range-label-width: 5rem !default;
 .btn {
 	user-select: none;
 	position: absolute;
+	cursor: pointer;
+    bottom: 2rem;
 	width: calc(100% - 4rem);
 	height: 50px;
-    bottom: 3rem;
-	margin: 10px 0;
 	border-radius: $field-border-radius;
-	color: #fff;
 	border: none;
+    //bottom: 3rem;
+	color: #fff;
 	background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 	letter-spacing: 1px;
 	font-weight: bold;
 	text-transform: uppercase;
     font-style: italic;
-	cursor: pointer;
 	transition: all 150ms ease;
+
 	&:active {
 		transform: translateY(3%);
 		box-shadow: 0 4px 8px rgba(255, 255, 255, 0.08);
 	}
 }
 
+@media (max-width: 812px) {
+    #settings-wrapper {
+        padding: 3.5rem 1rem 5rem 1rem;
+    }
 
+    #settings-container {
+        width: calc(100% - 2rem);
+    }
+
+    .btn {
+        bottom: 1rem;
+	    width: calc(100% - 2rem);
+    }
+}
