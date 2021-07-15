@@ -3,20 +3,20 @@ import { app, spatialHash } from './app'
 import { add, sub, dot, magnitude, scale, normalize } from './vector'
 
 class Ball extends PIXI.Graphics {
-    constructor(r, x, y, speed) {
+    constructor(maskProb=0) {
         const rotation = Math.random() * Math.PI * 2
         super()
-        this.r = r || Math.random() * 5 + 5
-        this.x = x || Math.random() * (app.screen.width - 2 * this.r) + this.r
-        this.y = y || Math.random() * (app.screen.height - 2 * this.r) + this.r
-        this.speed = speed || 2
+        this.r = Math.random() * 5 + 5
+        this.x = Math.random() * (app.screen.width - 2 * this.r) + this.r
+        this.y = Math.random() * (app.screen.height - 2 * this.r) + this.r
+        this.speed = 2
         this.velocity = new PIXI.Point(
             this.speed * Math.cos(rotation),
             this.speed * Math.sin(rotation)
         )
         this.originalColor = Math.random() * 0x00ffff
         this.infected = false
-        this.hasMask = true
+        this.hasMask = Math.random()<maskProb
         this.color(this.originalColor)
         this.cells = []
     }
@@ -122,6 +122,7 @@ const balls = new PIXI.Container()
 
 function setupBalls() {
     app.stage.addChild(balls);
+    if (!app.stage.children.length) app.stage.length.addChild(balls);
     for (let i = 0; i < numBalls; i++) {
         const ball = new Ball()
         if (i < numInfected) {

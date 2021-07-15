@@ -48,4 +48,6 @@ function loop(deltaTime) {
     stats.end()
 }
 
+console.log(slider.nodeValue, sliderValue.getAttribute("data-length"))
+
 export { app, spatialHash }
