@@ -3,20 +3,20 @@ import { app, spatialHash } from './app'
 import { add, sub, dot, magnitude, scale, normalize } from './vector'
 
 class Ball extends PIXI.Graphics {
-    constructor(r, x, y, speed) {
+    constructor(maskProb) {
         const rotation = Math.random() * Math.PI * 2
         super()
-        this.r = r || Math.random() * 5 + 5
-        this.x = x || Math.random() * (app.screen.width - 2 * this.r) + this.r
-        this.y = y || Math.random() * (app.screen.height - 2 * this.r) + this.r
-        this.speed = speed || 2
+        this.r = Math.random() * 5 + 5
+        this.x = Math.random() * (app.screen.width - 2 * this.r) + this.r
+        this.y = Math.random() * (app.screen.height - 2 * this.r) + this.r
+        this.speed = 2
         this.velocity = new PIXI.Point(
             this.speed * Math.cos(rotation),
             this.speed * Math.sin(rotation)
         )
-        this.originalColor = Math.random() * 0x00ffff
-        this.infected = false
-        this.hasMask = true
+        this.originalColor = PIXI.utils.rgb2hex([0, Math.random() * 0.8 + 0.2, Math.random() * 0.8 + 0.2])
+        this.condition = 'susceptable'
+        this.hasMask = Math.random() < maskProb
         this.color(this.originalColor)
         this.cells = []
     }
@@ -41,10 +41,10 @@ class Ball extends PIXI.Graphics {
         this.clear()
         if (this.hasMask) {
             this.beginFill(0xffffff)
-            this.arc(0, 0, this.r, 0, Math.PI)
+            this.arc(0, 0, this.r, 0, Math.PI * 2)
             this.endFill()
             this.beginFill(color)
-            this.arc(0, 0, this.r, Math.PI, Math.PI * 2)
+            this.arc(0, 0, this.r / 2, 0, Math.PI * 2)
             this.endFill()
         } else {
             this.beginFill(color)
@@ -74,13 +74,14 @@ class Ball extends PIXI.Graphics {
     }
 
     collide() {
+        loop:
         for (let cell of this.cells)
             for (let ball of cell) {
                 const d = Math.hypot(this.x - ball.x, this.y - ball.y)
-                if (this !== ball && d < this.r + ball.r) {
+                if (this !== ball && d < this.r + ball.r && this.condition !== 'dead' && ball.condition !== 'dead') {
                     this.bounce(ball)
                     this.contage(ball)
-                    break;
+                    break loop;
                 }
             }
     }
@@ -99,33 +100,53 @@ class Ball extends PIXI.Graphics {
     }
 
     contage(ball) {
-        if (this.infected) {
-            const r = this.hasMask ? 0.23 * 0.3 : 0.23
+        let r = 0.23
+        if (this.condition === 'infected' && ball.condition === 'susceptable') {
+            if (this.hasMask) r *= 0.3
+            if (ball.hasMask) r *= 0.01
             if (Math.random() < r) {
-                ball.infected = true
+                ball.condition = 'infected'
+                ball.infectedFrame = app.ticker.frame
                 ball.color(0xff0000)
             }
-
-        } else if (ball.infected) {
-            const r = ball.hasMask ? 0.23 * 0.01 : 0.23
+        } else if (ball.condition === 'infected' && this.condition === 'susceptable') {
+            if (ball.hasMask) r *= 0.3
+            if (this.hasMask) r *= 0.01
             if (Math.random() < r) {
-                this.infected = true
+                this.condition = 'infected'
+                this.infectedFrame = app.ticker.frame
                 this.color(0xff0000)
             }
+        }
+    }
 
+    updateCondition() {
+        if (this.condition === 'infected' && app.ticker.frame - this.infectedFrame > 200) {
+            if (Math.random() < fatality) {
+                this.condition = 'dead'
+                this.tint = 0x000000
+                this.zIndex = -1
+            } else {
+                this.condition = 'recovered'
+                this.color(this.originalColor)
+            }
         }
     }
 }
 
-const numBalls = 5000, numInfected = 1
+let numBalls = 5000, fatality
 const balls = new PIXI.Container()
+balls.sortableChildren = true
 
-function setupBalls() {
-    app.stage.addChild(balls);
+function setupBalls(maskProb, fatalityProb) {
+    if (!app.stage.children.length) app.stage.addChild(balls);
+    fatality = fatalityProb
+    console.log(maskProb, fatalityProb)
     for (let i = 0; i < numBalls; i++) {
-        const ball = new Ball()
-        if (i < numInfected) {
-            ball.infected = true
+        const ball = new Ball(maskProb)
+        if (i === 0) {
+            ball.condition = 'infected'
+            ball.infectedFrame = 0
             ball.color(0xff0000)
         }
         balls.addChild(ball)
