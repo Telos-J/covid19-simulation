@@ -1,16 +1,17 @@
 import { Chart, registerables } from 'chart.js';
 import { balls } from './ball'
+import { app } from './app'
 Chart.register(...registerables);
 Chart.defaults.color = '#fff'
 Chart.defaults.font.family = 'Montserrat'
 Chart.defaults.font.style = 'italic'
 
-const labels = []
+let labels = []
 
 const infected = {
     label: 'Infected',
     backgroundColor: 'rgb(255, 99, 132)',
-    borderColor: 'rgb(255, 99, 132)',
+    borderWidth: 0,
     data: [],
     fill: true,
     radius: 0,
@@ -20,7 +21,27 @@ const infected = {
 const susceptable = {
     label: 'Susceptable',
     backgroundColor: 'rgb(99, 255, 132)',
-    borderColor: 'rgb(99, 255, 132)',
+    borderWidth: 0,
+    data: [],
+    fill: true,
+    radius: 0,
+    tension: 0.4
+}
+
+const dead = {
+    label: 'Dead',
+    backgroundColor: 'rgb(0, 0, 0)',
+    borderWidth: 0,
+    data: [],
+    fill: true,
+    radius: 0,
+    tension: 0.4
+}
+
+const recovered = {
+    label: 'Recovered',
+    backgroundColor: 'rgb(107, 76, 154)',
+    borderWidth: 0,
     data: [],
     fill: true,
     radius: 0,
@@ -29,12 +50,13 @@ const susceptable = {
 
 const data = {
     labels: labels,
-    datasets: [infected, susceptable]
+    datasets: [infected, susceptable, dead, recovered]
 }
 
 const config = {
     type: 'line',
     data: data,
+    finished: false,
     options: {
         responsive: true,
         animation: false,
@@ -80,26 +102,38 @@ const config = {
         layout: {
             padding: 20
         }
-    }
+    },
 }
 
-const chart = new Chart(
+let chart = new Chart(
     document.getElementById('chart'),
     config
 )
 
-let frame = 0
 function updateChart() {
-    let infectedNum = 0, susceptableNum = 0;
+    let susceptableNum = 0, infectedNum = 0, deadNum = 0, recoveredNum = 0;
     for (let ball of balls.children) {
-        if (ball.infected) infectedNum++
-        else susceptableNum++
+        if (ball.condition === 'susceptable') susceptableNum++
+        else if (ball.condition === 'infected') infectedNum++
+        else if (ball.condition === 'dead') deadNum++
+        else if (ball.condition === 'recovered') recoveredNum++
     }
-    if (susceptableNum) {
-        labels.push(frame++)
+    if (!chart.config.finished) {
+        labels.push(app.ticker.frame)
         infected.data.push(infectedNum)
         susceptable.data.push(susceptableNum)
+        dead.data.push(deadNum)
+        recovered.data.push(recoveredNum)
     }
+    chart.config.finished = infectedNum === 0
+}
+
+function resetChart() {
+    labels.length = 0
+    infected.data.length = 0
+    susceptable.data.length = 0
+    dead.data.length = 0
+    recovered.data.length = 0
 }
 
 setInterval(() => chart.update(), 100)
@@ -107,17 +141,17 @@ setInterval(() => chart.update(), 100)
 { // UI/UX stuff
     const chartIcon = document.querySelector('#chart-icon')
     const settingsIcon = document.querySelector('#settings-icon')
-    const settingsContainer = document.querySelector('#settings-container')
+    const settingsWrapper = document.querySelector('#settings-wrapper')
 
     chartIcon.addEventListener('click', (e) => {
         e.stopPropagation()
-        settingsContainer.classList.add('hidden')
+        settingsWrapper.classList.add('hidden')
         if (drawer.classList.contains('closed')) drawer.classList.remove('closed')
     })
 
     settingsIcon.addEventListener('click', (e) => {
         e.stopPropagation()
-        settingsContainer.classList.remove('hidden')
+        settingsWrapper.classList.remove('hidden')
         if (drawer.classList.contains('closed')) drawer.classList.remove('closed')
     })
 
@@ -127,4 +161,4 @@ setInterval(() => chart.update(), 100)
     })
 }
 
-export { updateChart }
+export { updateChart, resetChart }
