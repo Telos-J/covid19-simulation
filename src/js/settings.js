@@ -49,6 +49,7 @@ function reset() {
     spatialHash.resetHash()
     setupBalls(
         getValue('mask-slider'),
+        getValue('vaccination-slider'),
         getValue('fatality-slider')
     )
     if (!stackSwitch.checked) resetChart()
