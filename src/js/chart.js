@@ -15,7 +15,6 @@ const infected = {
     data: [],
     fill: true,
     radius: 0,
-    tension: 0.4
 }
 
 const susceptable = {
@@ -25,7 +24,6 @@ const susceptable = {
     data: [],
     fill: true,
     radius: 0,
-    tension: 0.4
 }
 
 const dead = {
@@ -35,7 +33,7 @@ const dead = {
     data: [],
     fill: true,
     radius: 0,
-    tension: 0.4
+    //tension: 0.4
 }
 
 const recovered = {
@@ -45,7 +43,6 @@ const recovered = {
     data: [],
     fill: true,
     radius: 0,
-    tension: 0.4
 }
 
 const data = {
@@ -60,7 +57,6 @@ const config = {
     options: {
         responsive: true,
         animation: false,
-        //aspectRatio: 4 / 3,
         maintainAspectRatio: false,
         interaction: {
             mode: 'nearest',
