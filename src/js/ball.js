@@ -112,7 +112,7 @@ class Ball extends PIXI.Graphics {
         if (this.condition === 'infected' && ball.condition === 'susceptable') {
             if (this.hasMask) r *= 0.3
             if (ball.hasMask) r *= 0.01
-            if (ball.vaccinated) r *= 0
+            if (ball.vaccinated) r *= 0.05
             if (Math.random() < r) {
                 ball.condition = 'infected'
                 ball.infectedFrame = app.ticker.frame
@@ -121,7 +121,7 @@ class Ball extends PIXI.Graphics {
         } else if (ball.condition === 'infected' && this.condition === 'susceptable') {
             if (ball.hasMask) r *= 0.3
             if (this.hasMask) r *= 0.01
-            if (this.vaccinated) r *= 0
+            if (this.vaccinated) r *= 0.05
             if (Math.random() < r) {
                 this.condition = 'infected'
                 this.infectedFrame = app.ticker.frame
