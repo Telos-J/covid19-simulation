@@ -1,6 +1,6 @@
 import { balls, setupBalls } from './ball'
 import { app, spatialHash } from './app'
-import { resetChart } from './chart'
+import { chart, resetChart } from './chart'
 
 ////////////
 // Slider //
@@ -62,6 +62,7 @@ function reset() {
     )
     if (!stackSwitch.checked) resetChart()
     showFatalitySwitch.checked = false
+    chart.config.finished = false
 }
 
 document.querySelector('.btn').addEventListener('click', reset)
