@@ -1,6 +1,6 @@
 import { balls, setupBalls } from './ball'
 import { app, spatialHash } from './app'
-import { resetChart } from './chart'
+import { chart, resetChart } from './chart'
 
 ////////////
 // Slider //
@@ -38,6 +38,14 @@ function getValue(id) {
 ////////////
 
 const stackSwitch = document.querySelector('#stack')
+const showFatalitySwitch = document.querySelector('#show-fatality')
+
+showFatalitySwitch.addEventListener('input', () => {
+    for (const ball of balls.children) {
+        if (!showFatalitySwitch.checked) ball.alpha = 1
+        else if (ball.condition !== 'dead') ball.alpha = 0
+    }
+})
 
 ////////////
 // Button //
@@ -53,6 +61,8 @@ function reset() {
         getValue('fatality-slider')
     )
     if (!stackSwitch.checked) resetChart()
+    showFatalitySwitch.checked = false
+    chart.config.finished = false
 }
 
 document.querySelector('.btn').addEventListener('click', reset)
