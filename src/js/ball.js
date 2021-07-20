@@ -3,7 +3,7 @@ import { app, spatialHash } from './app'
 import { add, sub, dot, magnitude, scale, normalize } from './vector'
 
 class Ball extends PIXI.Graphics {
-    constructor(maskProb, vaccineProb) {
+    constructor(maskProb, vaccineProb, efficacy) {
         const rotation = Math.random() * Math.PI * 2
         super()
         this.r = Math.random() * 5 + 5
@@ -17,6 +17,7 @@ class Ball extends PIXI.Graphics {
         this.originalColor = PIXI.utils.rgb2hex([0, Math.random() * 0.8 + 0.2, Math.random() * 0.8 + 0.2])
         this.condition = 'susceptable'
         this.vaccinated = Math.random() < vaccineProb
+        this.effective = Math.random() < efficacy
         this.hasMask = this.vaccinated ? false : Math.random() < maskProb
         this.color(this.originalColor)
         this.cells = []
@@ -111,7 +112,7 @@ class Ball extends PIXI.Graphics {
         if (this.condition === 'infected' && ball.condition === 'susceptable') {
             if (this.hasMask) r *= 0.3
             if (ball.hasMask) r *= 0.01
-            if (ball.vaccinated) r *= 0
+            if (ball.vaccinated && ball.effective) r *= 0
             if (Math.random() < r) {
                 ball.condition = 'infected'
                 ball.infectedFrame = app.ticker.frame
@@ -120,7 +121,7 @@ class Ball extends PIXI.Graphics {
         } else if (ball.condition === 'infected' && this.condition === 'susceptable') {
             if (ball.hasMask) r *= 0.3
             if (this.hasMask) r *= 0.01
-            if (this.vaccinated) r *= 0
+            if (this.vaccinated && this.effective) r *= 0
             if (Math.random() < r) {
                 this.condition = 'infected'
                 this.infectedFrame = app.ticker.frame
@@ -135,6 +136,7 @@ class Ball extends PIXI.Graphics {
                 this.condition = 'dead'
                 this.tint = 0x000000
                 this.zIndex = -1
+                this.alpha = 1
             } else {
                 this.condition = 'recovered'
                 this.color(this.originalColor)
@@ -151,11 +153,13 @@ function setupBalls(maskProb, vaccineProb, fatalityProb) {
     if (!app.stage.children.length) app.stage.addChild(balls);
     fatality = fatalityProb
     for (let i = 0; i < numBalls; i++) {
-        const ball = new Ball(maskProb, vaccineProb)
+        const ball = new Ball(maskProb, vaccineProb, 0.95)
+        const dist = Math.hypot(app.screen.width / 2 - ball.x, app.screen.height / 2 - ball.y)
         if (i === 0) {
             ball.condition = 'infected'
             ball.infectedFrame = 0
             ball.color(0xff0000)
+            ball.position.set(app.screen.width / 2, app.screen.height / 2)
         }
         balls.addChild(ball)
         spatialHash.insert(ball)
