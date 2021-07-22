@@ -15,7 +15,6 @@ const infected = {
     data: [],
     fill: true,
     radius: 0,
-    tension: 0.4
 }
 
 const susceptable = {
@@ -25,7 +24,6 @@ const susceptable = {
     data: [],
     fill: true,
     radius: 0,
-    tension: 0.4
 }
 
 const dead = {
@@ -35,7 +33,6 @@ const dead = {
     data: [],
     fill: true,
     radius: 0,
-    tension: 0.4
 }
 
 const recovered = {
@@ -45,7 +42,6 @@ const recovered = {
     data: [],
     fill: true,
     radius: 0,
-    tension: 0.4
 }
 
 const data = {
@@ -60,7 +56,6 @@ const config = {
     options: {
         responsive: true,
         animation: false,
-        //aspectRatio: 4 / 3,
         maintainAspectRatio: false,
         interaction: {
             mode: 'nearest',
@@ -111,21 +106,27 @@ let chart = new Chart(
 )
 
 function updateChart() {
-    let susceptableNum = 0, infectedNum = 0, deadNum = 0, recoveredNum = 0;
+    let susceptableNum = 0, infectedNum = 0, deadNum = 0, recoveredNum = 0, peak = 0;
+    if (chart.config.finished) return
     for (let ball of balls.children) {
         if (ball.condition === 'susceptable') susceptableNum++
         else if (ball.condition === 'infected') infectedNum++
         else if (ball.condition === 'dead') deadNum++
         else if (ball.condition === 'recovered') recoveredNum++
     }
-    if (!chart.config.finished) {
-        labels.push(app.ticker.frame)
-        infected.data.push(infectedNum)
-        susceptable.data.push(susceptableNum)
-        dead.data.push(deadNum)
-        recovered.data.push(recoveredNum)
+    labels.push(app.ticker.frame)
+    infected.data.push(infectedNum)
+    susceptable.data.push(susceptableNum)
+    dead.data.push(deadNum)
+    recovered.data.push(recoveredNum)
+    //chart.config.finished = infectedNum === 0
+    if (infectedNum === 0) {
+        chart.config.finished = true
+        for (const label of labels) {
+            peak = Math.max(peak, infected.data[label])
+        }
+        console.log(`peak: ${peak}, frames: ${labels.length}, susceptable: ${susceptable.data[labels.length - 1]}, dead: ${dead.data[labels.length - 1]}`)
     }
-    chart.config.finished = infectedNum === 0
 }
 
 function resetChart() {
@@ -161,4 +162,4 @@ setInterval(() => chart.update(), 100)
     })
 }
 
-export { updateChart, resetChart }
+export { chart, updateChart, resetChart }
