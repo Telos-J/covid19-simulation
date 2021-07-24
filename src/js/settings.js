@@ -30,7 +30,7 @@ for (let rangeSlider of rangeSliders) {
 }
 
 function getValue(id) {
-    return parseInt(document.querySelector(`#${id} .length__title`).getAttribute('data-length')) / 100
+    return parseInt(document.querySelector(`#${id} .length__title`).getAttribute('data-length'))
 }
 
 ////////////
@@ -56,9 +56,10 @@ function reset() {
     balls.removeChildren()
     spatialHash.resetHash()
     setupBalls(
-        getValue('mask-slider'),
-        getValue('vaccination-slider'),
-        getValue('fatality-slider')
+        getValue('balls-slider'),
+        getValue('mask-slider') / 100,
+        getValue('vaccination-slider') / 100,
+        getValue('fatality-slider') / 100
     )
     if (!stackSwitch.checked) resetChart()
     showFatalitySwitch.checked = false
