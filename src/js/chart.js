@@ -146,14 +146,16 @@ setInterval(() => chart.update(), 100)
 
     chartIcon.addEventListener('click', (e) => {
         e.stopPropagation()
-        settingsWrapper.classList.add('hidden')
         if (drawer.classList.contains('closed')) drawer.classList.remove('closed')
+        else if (settingsWrapper.classList.contains('hidden')) drawer.classList.add('closed')
+        settingsWrapper.classList.add('hidden')
     })
 
     settingsIcon.addEventListener('click', (e) => {
         e.stopPropagation()
-        settingsWrapper.classList.remove('hidden')
         if (drawer.classList.contains('closed')) drawer.classList.remove('closed')
+        else if (!settingsWrapper.classList.contains('hidden')) drawer.classList.add('closed')
+        settingsWrapper.classList.remove('hidden')
     })
 
     window.addEventListener('click', (e) => {
