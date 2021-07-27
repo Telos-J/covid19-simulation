@@ -19,7 +19,7 @@ class Ball extends PIXI.Graphics {
         this.vaccinated = false
         this.effective = Math.random() < efficacy
         this.hasMask = hasMask
-        this.color(this.originalColor)
+        this.color()
         this.cells = []
     }
 
@@ -41,15 +41,30 @@ class Ball extends PIXI.Graphics {
 
     color(color) {
         this.clear()
-        if (this.hasMask) {
+        if (color) {
+            this.beginFill(color)
+            this.arc(0, 0, this.r, 0, Math.PI * 2)
+            this.endFill()
+        } else if (this.condition === 'infected') {
+            this.beginFill(0xff0000)
+            this.arc(0, 0, this.r, 0, Math.PI * 2)
+            this.endFill()
+        } else if (this.vaccinated) {
+            this.beginFill(0xffff00)
+            this.arc(0, 0, this.r, 0, Math.PI * 2)
+            this.endFill()
+            this.beginFill(this.originalColor)
+            this.arc(0, 0, this.r / 2, 0, Math.PI * 2)
+            this.endFill()
+        } else if (this.hasMask) {
             this.beginFill(0xffffff)
             this.arc(0, 0, this.r, 0, Math.PI * 2)
             this.endFill()
-            this.beginFill(color)
+            this.beginFill(this.originalColor)
             this.arc(0, 0, this.r / 2, 0, Math.PI * 2)
             this.endFill()
         } else {
-            this.beginFill(color)
+            this.beginFill(this.originalColor)
             this.arc(0, 0, this.r, 0, Math.PI * 2)
             this.endFill()
         }
@@ -57,13 +72,7 @@ class Ball extends PIXI.Graphics {
 
     vaccinate() {
         this.vaccinated = true
-        this.clear()
-        this.beginFill(0xffff00)
-        this.arc(0, 0, this.r, 0, Math.PI * 2)
-        this.endFill()
-        this.beginFill(this.originalColor)
-        this.arc(0, 0, this.r / 2, 0, Math.PI * 2)
-        this.endFill()
+        this.color()
     }
 
     move() {
@@ -121,7 +130,7 @@ class Ball extends PIXI.Graphics {
             if (Math.random() < r) {
                 ball.condition = 'infected'
                 ball.infectedFrame = app.ticker.frame
-                ball.color(0xff0000)
+                ball.color()
             }
         } else if (ball.condition === 'infected' && this.condition === 'susceptible') {
             if (ball.hasMask) r *= 0.3
@@ -130,7 +139,7 @@ class Ball extends PIXI.Graphics {
             if (Math.random() < r) {
                 this.condition = 'infected'
                 this.infectedFrame = app.ticker.frame
-                this.color(0xff0000)
+                this.color()
             }
         }
     }
@@ -144,7 +153,7 @@ class Ball extends PIXI.Graphics {
                 this.alpha = 1
             } else {
                 this.condition = 'recovered'
-                this.color(this.originalColor)
+                this.color()
             }
         }
     }
@@ -174,8 +183,8 @@ function outbreak() {
     const ball = balls.children[0]
     ball.condition = 'infected'
     ball.infectedFrame = 0
-    ball.color(0xff0000)
     ball.position.set(app.screen.width / 2, app.screen.height / 2)
+    ball.color()
 }
 
 function vaccinate(perimeter, vaccineProb) {

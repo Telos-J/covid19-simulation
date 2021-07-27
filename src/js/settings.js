@@ -54,7 +54,6 @@ spatialHashSwitch.addEventListener('input', () => {
     else spatialHash.turnOffGraphic()
 })
 
-
 ////////////
 // Button //
 ////////////
@@ -62,7 +61,11 @@ spatialHashSwitch.addEventListener('input', () => {
 function reset() {
     app.ticker.frame = 0
     balls.removeChildren()
-    spatialHash.resetHash()
+    spatialHash.resetHash(
+        null,
+        getValue('balls-slider') <= 3000 ? [100, 100] : [10, 10],
+        getValue('balls-slider') <= 3000
+    )
     setupBalls(
         getValue('balls-slider'),
         getValue('mask-slider') / 100,
@@ -72,6 +75,9 @@ function reset() {
     )
     if (!stackSwitch.checked) resetChart()
     fatalitySwitch.checked = false
+    spatialHashSwitch.checked = false
+    if (getValue('balls-slider') <= 3000) spatialHashSwitch.disabled = false
+    else spatialHashSwitch.disabled = true
     chart.config.finished = false
 }
 
