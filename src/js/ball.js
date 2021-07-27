@@ -3,10 +3,10 @@ import { app, spatialHash } from './app'
 import { add, sub, dot, magnitude, scale, normalize } from './vector'
 
 class Ball extends PIXI.Graphics {
-    constructor(maskProb, vaccineProb, efficacy) {
+    constructor(r, maskProb, vaccineProb, efficacy) {
         const rotation = Math.random() * Math.PI * 2
         super()
-        this.r = Math.random() * 5 + 5
+        this.r = Math.random() * 5 + r
         this.x = Math.random() * (app.screen.width - 2 * this.r) + this.r
         this.y = Math.random() * (app.screen.height - 2 * this.r) + this.r
         this.speed = 2
@@ -145,16 +145,16 @@ class Ball extends PIXI.Graphics {
     }
 }
 
-let numBalls = 5000, fatality
+let fatality
 const balls = new PIXI.Container()
 balls.sortableChildren = true
 
-function setupBalls(maskProb, vaccineProb, fatalityProb) {
+function setupBalls(numBalls, maskProb, vaccineProb, fatalityProb) {
     if (!app.stage.children.length) app.stage.addChild(balls);
     fatality = fatalityProb
+    const r = 37 / 180000000 * numBalls ** 2 - 209 / 60000 * numBalls + 311 / 18
     for (let i = 0; i < numBalls; i++) {
-        const ball = new Ball(maskProb, vaccineProb, 0.95)
-        const dist = Math.hypot(app.screen.width / 2 - ball.x, app.screen.height / 2 - ball.y)
+        const ball = new Ball(r, maskProb, vaccineProb, 0.95)
         if (i === 0) {
             ball.condition = 'infected'
             ball.infectedFrame = 0
