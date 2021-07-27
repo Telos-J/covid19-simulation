@@ -38,9 +38,10 @@ function getValue(id) {
 ////////////
 
 const stackSwitch = document.querySelector('#stack')
-const showFatalitySwitch = document.querySelector('#show-fatality')
+const fatalitySwitch = document.querySelector('#show-fatality')
+const perimeterSwitch = document.querySelector('#set-perimeter')
 
-showFatalitySwitch.addEventListener('input', () => {
+fatalitySwitch.addEventListener('input', () => {
     for (const ball of balls.children) {
         if (!showFatalitySwitch.checked) ball.alpha = 1
         else if (ball.condition !== 'dead') ball.alpha = 0
@@ -59,10 +60,11 @@ function reset() {
         getValue('balls-slider'),
         getValue('mask-slider') / 100,
         getValue('vaccination-slider') / 100,
-        getValue('fatality-slider') / 100
+        getValue('fatality-slider') / 100,
+        perimeterSwitch.checked
     )
     if (!stackSwitch.checked) resetChart()
-    showFatalitySwitch.checked = false
+    fatalitySwitch.checked = false
     chart.config.finished = false
 }
 

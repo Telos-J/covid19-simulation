@@ -3,7 +3,7 @@ import { app, spatialHash } from './app'
 import { add, sub, dot, magnitude, scale, normalize } from './vector'
 
 class Ball extends PIXI.Graphics {
-    constructor(r, maskProb, vaccineProb, efficacy) {
+    constructor(r, maskProb, efficacy) {
         const rotation = Math.random() * Math.PI * 2
         super()
         this.r = Math.random() * 5 + r
@@ -16,7 +16,7 @@ class Ball extends PIXI.Graphics {
         )
         this.originalColor = PIXI.utils.rgb2hex([0, Math.random() * 0.8 + 0.2, Math.random() * 0.8 + 0.2])
         this.condition = 'susceptable'
-        this.vaccinated = Math.random() < vaccineProb
+        this.vaccinated = false
         this.effective = Math.random() < efficacy
         this.hasMask = this.vaccinated ? false : Math.random() < maskProb
         this.color(this.originalColor)
@@ -48,18 +48,22 @@ class Ball extends PIXI.Graphics {
             this.beginFill(color)
             this.arc(0, 0, this.r / 2, 0, Math.PI * 2)
             this.endFill()
-        } else if (this.vaccinated) {
-            this.beginFill(0xffff00)
-            this.arc(0, 0, this.r, 0, Math.PI * 2)
-            this.endFill()
-            this.beginFill(color)
-            this.arc(0, 0, this.r / 2, 0, Math.PI * 2)
-            this.endFill()
         } else {
             this.beginFill(color)
             this.arc(0, 0, this.r, 0, Math.PI * 2)
             this.endFill()
         }
+    }
+
+    vaccinate() {
+        this.vaccinated = true
+        this.clear()
+        this.beginFill(0xffff00)
+        this.arc(0, 0, this.r, 0, Math.PI * 2)
+        this.endFill()
+        this.beginFill(this.originalColor)
+        this.arc(0, 0, this.r / 2, 0, Math.PI * 2)
+        this.endFill()
     }
 
     move() {
@@ -150,20 +154,49 @@ let fatality
 const balls = new PIXI.Container()
 balls.sortableChildren = true
 
-function setupBalls(numBalls, maskProb, vaccineProb, fatalityProb) {
+function setupBalls(numBalls = 5000, maskProb = 0, vaccineProb = 0, fatalityProb = 0.2, perimeter = false) {
     if (!app.stage.children.length) app.stage.addChild(balls);
     fatality = fatalityProb
     const r = 37 / 180000000 * numBalls ** 2 - 209 / 60000 * numBalls + 311 / 18
     for (let i = 0; i < numBalls; i++) {
-        const ball = new Ball(r, maskProb, vaccineProb, 0.95)
-        if (i === 0) {
-            ball.condition = 'infected'
-            ball.infectedFrame = 0
-            ball.color(0xff0000)
-            ball.position.set(app.screen.width / 2, app.screen.height / 2)
-        }
+        const ball = new Ball(r, maskProb, 0.95)
         balls.addChild(ball)
         spatialHash.insert(ball)
+    }
+
+    vaccinate(perimeter, vaccineProb)
+    outbreak()
+}
+
+function outbreak() {
+    const ball = balls.children[0]
+    ball.condition = 'infected'
+    ball.infectedFrame = 0
+    ball.color(0xff0000)
+    ball.position.set(app.screen.width / 2, app.screen.height / 2)
+}
+
+function vaccinate(perimeter, vaccineProb) {
+    if (perimeter) vaccinatePerimeter(vaccineProb)
+    else vaccinateRandomly(vaccineProb)
+}
+
+function vaccinatePerimeter(vaccineProb) {
+    const vaccinated = balls.children
+        .filter(ball => Math.hypot(app.screen.width / 2 - ball.x, app.screen.height / 2 - ball.y) > app.screen.height / 4)
+        .sort((ball1, ball2) => {
+            return Math.hypot(app.screen.width / 2 - ball1.x, app.screen.height / 2 - ball1.y) - Math.hypot(app.screen.width / 2 - ball2.x, app.screen.height / 2 - ball2.y)
+        })
+
+    for (let i = 0; i < Math.floor(balls.children.length * vaccineProb); i++) {
+        if (i >= vaccinated.length) break
+        vaccinated[i].vaccinate()
+    }
+}
+
+function vaccinateRandomly(vaccineProb) {
+    for (const ball of balls.children) {
+        if (Math.random() < vaccineProb) ball.vaccinate()
     }
 }
 

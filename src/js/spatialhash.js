@@ -20,7 +20,6 @@ class SpatialHash {
         this.numCol = Math.floor((this.max[0] - this.min[0]) / this.cellsize[0])
         this.numRow = Math.floor((this.max[1] - this.min[1]) / this.cellsize[1])
         this.cells = [...Array(this.numCol)].map(_ => [...Array(this.numRow)].map(_ => new Set()));
-        this.balls = new Set()
     }
 
     visualize() {
