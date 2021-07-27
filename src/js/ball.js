@@ -183,7 +183,7 @@ function vaccinate(perimeter, vaccineProb) {
 
 function vaccinatePerimeter(vaccineProb) {
     const vaccinated = balls.children
-        .filter(ball => Math.hypot(app.screen.width / 2 - ball.x, app.screen.height / 2 - ball.y) > app.screen.height / 4)
+        .filter(ball => Math.hypot(app.screen.width / 2 - ball.x, app.screen.height / 2 - ball.y) > app.screen.height / 3)
         .sort((ball1, ball2) => {
             return Math.hypot(app.screen.width / 2 - ball1.x, app.screen.height / 2 - ball1.y) - Math.hypot(app.screen.width / 2 - ball2.x, app.screen.height / 2 - ball2.y)
         })
