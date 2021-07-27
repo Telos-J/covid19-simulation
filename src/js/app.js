@@ -30,10 +30,10 @@ const app = new PIXI.Application({
 app.stage.sortableChildren = true
 app.renderer.plugins.interaction.autoPreventDefault = false;
 
-let spatialHash = new SpatialHash([[0, 0], [1600, 900]], [25, 25])
+let spatialHash = new SpatialHash([[0, 0], [1600, 900]], [10, 10])
 //spatialHash.visualize()
 
-PIXI.Loader.shared.load(() => setupBalls(0, 0, 0.2))
+PIXI.Loader.shared.load((loader, resources) => setupBalls())
 app.ticker.maxFPS = 30
 app.ticker.frame = 0
 app.ticker.add(loop)
