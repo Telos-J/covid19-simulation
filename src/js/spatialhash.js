@@ -9,6 +9,7 @@ class SpatialHash {
         this.numCol = Math.floor((this.max[0] - this.min[0]) / this.cellsize[0])
         this.numRow = Math.floor((this.max[1] - this.min[1]) / this.cellsize[1])
         this.cells = [...Array(this.numCol)].map(_ => [...Array(this.numRow)].map(_ => new Set()));
+        this.createGraphic()
     }
 
     resetHash(bounds, cellsize) {
@@ -22,19 +23,26 @@ class SpatialHash {
         this.cells = [...Array(this.numCol)].map(_ => [...Array(this.numRow)].map(_ => new Set()));
     }
 
-    visualize() {
-        const graphic = new PIXI.Graphics()
-        graphic.lineStyle(1, 0xffffff)
-        graphic.zIndex = 10
+    createGraphic() {
+        this.graphic = new PIXI.Graphics()
+        this.graphic.lineStyle(1, 0xffffff)
+        this.graphic.zIndex = 10
         for (let col = this.min[0]; col <= this.max[0]; col += this.cellsize[0]) {
-            graphic.moveTo(col, this.min[1])
-            graphic.lineTo(col, this.max[1])
+            this.graphic.moveTo(col, this.min[1])
+            this.graphic.lineTo(col, this.max[1])
         }
         for (let row = this.min[1]; row <= this.max[1]; row += this.cellsize[1]) {
-            graphic.moveTo(this.min[0], row)
-            graphic.lineTo(this.max[0], row)
+            this.graphic.moveTo(this.min[0], row)
+            this.graphic.lineTo(this.max[0], row)
         }
-        app.stage.addChild(graphic)
+    }
+
+    turnOnGraphic() {
+        app.stage.addChild(this.graphic)
+    }
+
+    turnOffGraphic() {
+        app.stage.removeChild(this.graphic)
     }
 
     getCellIndex(x, y) {

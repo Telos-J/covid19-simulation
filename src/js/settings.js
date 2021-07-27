@@ -38,15 +38,22 @@ function getValue(id) {
 ////////////
 
 const stackSwitch = document.querySelector('#stack')
-const fatalitySwitch = document.querySelector('#show-fatality')
 const perimeterSwitch = document.querySelector('#set-perimeter')
+const fatalitySwitch = document.querySelector('#show-fatality')
+const spatialHashSwitch = document.querySelector('#show-spatialhash')
 
 fatalitySwitch.addEventListener('input', () => {
     for (const ball of balls.children) {
-        if (!showFatalitySwitch.checked) ball.alpha = 1
+        if (!fatalitySwitch.checked) ball.alpha = 1
         else if (ball.condition !== 'dead') ball.alpha = 0
     }
 })
+
+spatialHashSwitch.addEventListener('input', () => {
+    if (spatialHashSwitch.checked) spatialHash.turnOnGraphic()
+    else spatialHash.turnOffGraphic()
+})
+
 
 ////////////
 // Button //

@@ -3,7 +3,7 @@ import { app, spatialHash } from './app'
 import { add, sub, dot, magnitude, scale, normalize } from './vector'
 
 class Ball extends PIXI.Graphics {
-    constructor(r, maskProb, efficacy) {
+    constructor(r, hasMask, efficacy) {
         const rotation = Math.random() * Math.PI * 2
         super()
         this.r = Math.random() * 5 + r
@@ -15,10 +15,10 @@ class Ball extends PIXI.Graphics {
             this.speed * Math.sin(rotation)
         )
         this.originalColor = PIXI.utils.rgb2hex([0, Math.random() * 0.8 + 0.2, Math.random() * 0.8 + 0.2])
-        this.condition = 'susceptable'
+        this.condition = 'susceptible'
         this.vaccinated = false
         this.effective = Math.random() < efficacy
-        this.hasMask = this.vaccinated ? false : Math.random() < maskProb
+        this.hasMask = hasMask
         this.color(this.originalColor)
         this.cells = []
     }
@@ -114,7 +114,7 @@ class Ball extends PIXI.Graphics {
 
     contage(ball) {
         let r = 0.23
-        if (this.condition === 'infected' && ball.condition === 'susceptable') {
+        if (this.condition === 'infected' && ball.condition === 'susceptible') {
             if (this.hasMask) r *= 0.3
             if (ball.hasMask) r *= 0.01
             if (ball.vaccinated && ball.effective) r *= 0
@@ -123,7 +123,7 @@ class Ball extends PIXI.Graphics {
                 ball.infectedFrame = app.ticker.frame
                 ball.color(0xff0000)
             }
-        } else if (ball.condition === 'infected' && this.condition === 'susceptable') {
+        } else if (ball.condition === 'infected' && this.condition === 'susceptible') {
             if (ball.hasMask) r *= 0.3
             if (this.hasMask) r *= 0.01
             if (this.vaccinated && this.effective) r *= 0
@@ -150,21 +150,23 @@ class Ball extends PIXI.Graphics {
     }
 }
 
-let fatality
+let fatality, numVaccinated, numMasks
 const balls = new PIXI.Container()
 balls.sortableChildren = true
 
 function setupBalls(numBalls = 5000, maskProb = 0, vaccineProb = 0, fatalityProb = 0.2, perimeter = false) {
-    if (!app.stage.children.length) app.stage.addChild(balls);
+    if (!app.stage.children.includes(balls)) app.stage.addChild(balls);
     fatality = fatalityProb
     const r = 37 / 180000000 * numBalls ** 2 - 209 / 60000 * numBalls + 311 / 18
     for (let i = 0; i < numBalls; i++) {
-        const ball = new Ball(r, maskProb, 0.95)
+        const ball = new Ball(r, i < numBalls * maskProb, 0.95)
         balls.addChild(ball)
         spatialHash.insert(ball)
     }
 
     vaccinate(perimeter, vaccineProb)
+    numVaccinated = countVaccinated()
+    numMasks = countMasks()
     outbreak()
 }
 
@@ -182,22 +184,33 @@ function vaccinate(perimeter, vaccineProb) {
 }
 
 function vaccinatePerimeter(vaccineProb) {
-    const vaccinated = balls.children
-        .filter(ball => Math.hypot(app.screen.width / 2 - ball.x, app.screen.height / 2 - ball.y) > app.screen.height / 3)
+    const sortedBalls = balls.children
         .sort((ball1, ball2) => {
             return Math.hypot(app.screen.width / 2 - ball1.x, app.screen.height / 2 - ball1.y) - Math.hypot(app.screen.width / 2 - ball2.x, app.screen.height / 2 - ball2.y)
         })
+    const threshold = sortedBalls.findIndex(ball => Math.hypot(app.screen.width / 2 - ball.x, app.screen.height / 2 - ball.y) >= app.screen.height / 3)
 
     for (let i = 0; i < Math.floor(balls.children.length * vaccineProb); i++) {
-        if (i >= vaccinated.length) break
-        vaccinated[i].vaccinate()
+        if (i + threshold < sortedBalls.length) sortedBalls[i + threshold].vaccinate()
+        else sortedBalls[sortedBalls.length - i - 1].vaccinate()
     }
 }
 
 function vaccinateRandomly(vaccineProb) {
-    for (const ball of balls.children) {
-        if (Math.random() < vaccineProb) ball.vaccinate()
+    for (let i = 0; i < Math.floor(balls.children.length * vaccineProb); i++) {
+        balls.children[i].vaccinate()
     }
 }
 
-export { balls, setupBalls }
+function countVaccinated() {
+    const vaccinated = balls.children.filter(ball => ball.vaccinated)
+    return vaccinated.length
+}
+
+
+function countMasks() {
+    const masks = balls.children.filter(ball => ball.hasMask)
+    return masks.length
+}
+
+export { balls, setupBalls, numVaccinated, numMasks }
