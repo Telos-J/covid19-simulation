@@ -51,7 +51,6 @@ header {
     right: 0;
     width: 30vw;
     height: 100vh;
-    justify-content: center;
     background-color: #0a0e31;
     transition: transform 0.2s;
 
@@ -60,12 +59,46 @@ header {
     }
 }
 
+#stats-wrapper {
+    width: 100%;
+    height: 100%;
+    padding: 3.5rem 2rem 1rem 2rem;
+}
+
+#stats-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+}
+
 
 #chart-wrapper {
     position: relative;
-    top: 1.5rem;
     width: 100%;
     height: 20vw;
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+#numbers {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    align-self: center;
+    font-family: 'montserrat';
+    font-weight: 600;
+    font-style: italic;
+    margin-top: 1rem;
+    padding: 2rem;
+    color: white;
+
+    .row {
+        display: flex;
+        justify-content: space-between;
+    }
 }
 
 @media (orientation: portrait) {
@@ -105,30 +138,44 @@ header {
 // mobile
 @media (max-width: 812px) and (orientation: landscape) {
     #drawer {
-        width: 50vw;
+        width: 100%;
 
         &.closed {
-            transform: translateX(50vw);
+            transform: translateX(100%);
         }
     }
 
+    #stats-container {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
     #chart-wrapper {
-        height: calc(100vh - 3rem);
+        width: 55%;
+        height: 100%;
+    }
+
+    #numbers {
+        width: 40%;
+        height: 100%;
+        align-self: auto;
+        margin-top: 0;
     }
 }
 
 @media (max-width: 767px) and (orientation: portrait) {
     #drawer {
-        height: calc(90vw + 2rem);
+        height: 100%;
 
         &.closed {
-            transform: translateY(calc(-90vw - 2rem));
+            transform: translateY(-100%);
         }
     }
 
     #chart-wrapper {
-        width: 50vw;
-        height: 90vw;
+        width: 100%;
+        height: 100vw;
     }
 }
 

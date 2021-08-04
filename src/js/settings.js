@@ -38,14 +38,20 @@ function getValue(id) {
 ////////////
 
 const stackSwitch = document.querySelector('#stack')
-const fatalitySwitch = document.querySelector('#show-fatality')
 const perimeterSwitch = document.querySelector('#set-perimeter')
+const fatalitySwitch = document.querySelector('#show-fatality')
+const spatialHashSwitch = document.querySelector('#show-spatialhash')
 
 fatalitySwitch.addEventListener('input', () => {
     for (const ball of balls.children) {
-        if (!showFatalitySwitch.checked) ball.alpha = 1
+        if (!fatalitySwitch.checked) ball.alpha = 1
         else if (ball.condition !== 'dead') ball.alpha = 0
     }
+})
+
+spatialHashSwitch.addEventListener('input', () => {
+    if (spatialHashSwitch.checked) spatialHash.turnOnGraphic()
+    else spatialHash.turnOffGraphic()
 })
 
 ////////////
@@ -55,7 +61,11 @@ fatalitySwitch.addEventListener('input', () => {
 function reset() {
     app.ticker.frame = 0
     balls.removeChildren()
-    spatialHash.resetHash()
+    spatialHash.resetHash(
+        null,
+        getValue('balls-slider') <= 3000 ? [100, 100] : [10, 10],
+        getValue('balls-slider') <= 3000
+    )
     setupBalls(
         getValue('balls-slider'),
         getValue('mask-slider') / 100,
@@ -65,6 +75,9 @@ function reset() {
     )
     if (!stackSwitch.checked) resetChart()
     fatalitySwitch.checked = false
+    spatialHashSwitch.checked = false
+    if (getValue('balls-slider') <= 3000) spatialHashSwitch.disabled = false
+    else spatialHashSwitch.disabled = true
     chart.config.finished = false
 }
 

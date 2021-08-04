@@ -31,7 +31,45 @@
     </header>
     <canvas id="sim"></canvas>
     <div id="drawer" class="closed">
-        <div id="chart-wrapper"><canvas id="chart"></canvas></div>
+        <div id="stats-wrapper">
+        <div id="stats-container">
+            <div id="chart-wrapper"><canvas id="chart"></canvas></div>
+            <div id="numbers">
+                <div id="susceptible" class="row">
+                    <div class="heading">Susceptible</div>
+                    <div class="data">5000</div>
+                </div>
+                <div id="infected" class="row">
+                    <div class="heading">Infected</div>
+                    <div class="data">0</div>
+                </div>
+                <div id="dead" class="row">
+                    <div class="heading">Dead</div>
+                    <div class="data">0</div>
+                </div>
+                <div id="recovered" class="row">
+                    <div class="heading">Recovered</div>
+                    <div class="data">0</div>
+                </div>
+                <div id="peak" class="row">
+                    <div class="heading">Peak</div>
+                    <div class="data">0</div>
+                </div>
+                <div id="frames" class="row">
+                    <div class="heading">Frames</div>
+                    <div class="data">0</div>
+                </div>
+                <div id="vaccinated" class="row">
+                    <div class="heading">Vaccinated</div>
+                    <div class="data">0</div>
+                </div>
+                <div id="masks" class="row">
+                    <div class="heading">Masks</div>
+                    <div class="data">0</div>
+                </div>
+            </div>
+        </div>
+        </div>
         <div id="settings-wrapper">
         <div id="settings-container">
             <div id="balls-slider" class="range__slider" data-min="1K" data-max="10K">
@@ -57,12 +95,16 @@
                     <label for="stack">Stack Graph</label>
                 </div>
                 <div class="setting">
+                    <input type="checkbox" id="set-perimeter"/>
+                    <label for="set-perimeter">Set Perimeter</label>
+                </div>
+                <div class="setting">
                     <input type="checkbox" id="show-fatality"/>
                     <label for="show-fatality">Show Fatality</label>
                 </div>
                 <div class="setting">
-                    <input type="checkbox" id="set-perimeter"/>
-                    <label for="set-perimeter">Set Perimeter</label>
+                    <input type="checkbox" id="show-spatialhash" disabled/>
+                    <label for="show-spatialhash">Show Spatial Hash</label>
                 </div>
             </div>
         </div>

@@ -9,9 +9,10 @@ class SpatialHash {
         this.numCol = Math.floor((this.max[0] - this.min[0]) / this.cellsize[0])
         this.numRow = Math.floor((this.max[1] - this.min[1]) / this.cellsize[1])
         this.cells = [...Array(this.numCol)].map(_ => [...Array(this.numRow)].map(_ => new Set()));
+        this.interactive = false
     }
 
-    resetHash(bounds, cellsize) {
+    resetHash(bounds, cellsize, graphic) {
         if (bounds) {
             this.min = bounds[0]
             this.max = bounds[1]
@@ -20,21 +21,45 @@ class SpatialHash {
         this.numCol = Math.floor((this.max[0] - this.min[0]) / this.cellsize[0])
         this.numRow = Math.floor((this.max[1] - this.min[1]) / this.cellsize[1])
         this.cells = [...Array(this.numCol)].map(_ => [...Array(this.numRow)].map(_ => new Set()));
+        if (graphic) this.createGraphic()
     }
 
-    visualize() {
-        const graphic = new PIXI.Graphics()
-        graphic.lineStyle(1, 0xffffff)
-        graphic.zIndex = 10
-        for (let col = this.min[0]; col <= this.max[0]; col += this.cellsize[0]) {
-            graphic.moveTo(col, this.min[1])
-            graphic.lineTo(col, this.max[1])
+    createGraphic() {
+        this.graphic = new PIXI.Container()
+        for (const col in this.cells) {
+            for (const row in this.cells[col]) {
+                const graphic = new PIXI.Graphics()
+                graphic.lineStyle(1, 0xffffff)
+                graphic.zIndex = 10
+                graphic.drawRect(col * this.cellsize[0], row * this.cellsize[1], this.cellsize[0], this.cellsize[1])
+                graphic.interactive = true
+                graphic.hitArea = new PIXI.Rectangle(col * this.cellsize[0], row * this.cellsize[1], this.cellsize[0], this.cellsize[1]);
+                graphic.on('mouseover', e => {
+                    this.activeCell = this.cells[col][row]
+                    for (const ball of this.cells[col][row]) {
+                        ball.color(0xffffff)
+                    }
+                })
+                graphic.on('mouseout', e => {
+                    this.activeCell = null
+                    for (const ball of this.cells[col][row]) {
+                        ball.color()
+                    }
+                })
+                this.cells[col][row].graphic = graphic
+                this.graphic.addChild(graphic)
+            }
         }
-        for (let row = this.min[1]; row <= this.max[1]; row += this.cellsize[1]) {
-            graphic.moveTo(this.min[0], row)
-            graphic.lineTo(this.max[0], row)
-        }
-        app.stage.addChild(graphic)
+    }
+
+    turnOnGraphic() {
+        if (this.graphic) app.stage.addChild(this.graphic)
+        this.interactive = true
+    }
+
+    turnOffGraphic() {
+        if (this.graphic) app.stage.removeChild(this.graphic)
+        this.interactive = false
     }
 
     getCellIndex(x, y) {
@@ -54,12 +79,15 @@ class SpatialHash {
                 const cell = this.cells[col][row]
                 cell.add(ball)
                 ball.cells.push(cell)
+
+                if (this.interactive && this.activeCell === cell) ball.color(0xffffff)
             }
     }
 
     remove(ball) {
         for (let cell of ball.cells) cell.delete(ball)
         ball.cells = []
+        if (this.interactive) ball.color()
     }
 
     update(ball) {
