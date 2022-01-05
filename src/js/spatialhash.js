@@ -8,7 +8,7 @@ class SpatialHash {
         this.cellsize = cellsize
         this.numCol = Math.floor((this.max[0] - this.min[0]) / this.cellsize[0])
         this.numRow = Math.floor((this.max[1] - this.min[1]) / this.cellsize[1])
-        this.cells = [...Array(this.numCol)].map(_ => [...Array(this.numRow)].map(_ => new Set()));
+        this.cells = [...Array(this.numCol)].map(_ => [...Array(this.numRow)].map(_ => new Set()))
         this.interactive = false
     }
 
@@ -20,7 +20,9 @@ class SpatialHash {
         this.cellsize = cellsize || this.cellsize
         this.numCol = Math.floor((this.max[0] - this.min[0]) / this.cellsize[0])
         this.numRow = Math.floor((this.max[1] - this.min[1]) / this.cellsize[1])
-        this.cells = [...Array(this.numCol)].map(_ => [...Array(this.numRow)].map(_ => new Set()));
+        this.cells = [...Array(this.numCol)].map(_ => [...Array(this.numRow)].map(_ => new Set()))
+
+        app.stage.removeChild(this.graphic)
         if (graphic) this.createGraphic()
     }
 
@@ -31,9 +33,19 @@ class SpatialHash {
                 const graphic = new PIXI.Graphics()
                 graphic.lineStyle(1, 0xffffff)
                 graphic.zIndex = 10
-                graphic.drawRect(col * this.cellsize[0], row * this.cellsize[1], this.cellsize[0], this.cellsize[1])
+                graphic.drawRect(
+                    col * this.cellsize[0],
+                    row * this.cellsize[1],
+                    this.cellsize[0],
+                    this.cellsize[1]
+                )
                 graphic.interactive = true
-                graphic.hitArea = new PIXI.Rectangle(col * this.cellsize[0], row * this.cellsize[1], this.cellsize[0], this.cellsize[1]);
+                graphic.hitArea = new PIXI.Rectangle(
+                    col * this.cellsize[0],
+                    row * this.cellsize[1],
+                    this.cellsize[0],
+                    this.cellsize[1]
+                )
                 graphic.on('mouseover', e => {
                     this.activeCell = this.cells[col][row]
                     for (const ball of this.cells[col][row]) {
@@ -94,12 +106,17 @@ class SpatialHash {
         const [min1, max1] = ball.cells.bounds
         const min2 = this.getCellIndex(ball.x - ball.r, ball.y - ball.r)
         const max2 = this.getCellIndex(ball.x + ball.r, ball.y + ball.r)
-        if (min1[0] === min2[0] && min1[1] === min2[1] && max1[0] === max2[0] && max1[1] === max2[1]) return
+        if (
+            min1[0] === min2[0] &&
+            min1[1] === min2[1] &&
+            max1[0] === max2[0] &&
+            max1[1] === max2[1]
+        )
+            return
 
         this.remove(ball)
         this.insert(ball)
     }
-
 }
 
 export { SpatialHash }

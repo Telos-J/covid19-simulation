@@ -7,26 +7,28 @@ import { chart, resetChart } from './chart'
 ////////////
 
 const sliderProps = {
-    fill: "#0B1EDF",
-    background: "rgba(255, 255, 255, 0.214)",
-};
+    fill: '#0B1EDF',
+    background: 'rgba(255, 255, 255, 0.214)',
+}
 
 const rangeSliders = document.querySelectorAll('.range__slider')
 
 function updateSlider(rangeSlider) {
     const slider = rangeSlider.querySelector('.slider')
-    const percentage = (100 * (slider.value - slider.min)) / (slider.max - slider.min);
-    const bg = `linear-gradient(90deg, ${sliderProps.fill} ${percentage}%, ${sliderProps.background} ${percentage + 0.1}%)`;
-    const sliderValue = rangeSlider.querySelector(".length__title");
-    slider.style.background = bg;
-    sliderValue.setAttribute("data-length", slider.value);
+    const percentage = (100 * (slider.value - slider.min)) / (slider.max - slider.min)
+    const bg = `linear-gradient(90deg, ${sliderProps.fill} ${percentage}%, ${
+        sliderProps.background
+    } ${percentage + 0.1}%)`
+    const sliderValue = rangeSlider.querySelector('.length__title')
+    slider.style.background = bg
+    sliderValue.setAttribute('data-length', slider.value)
 }
 
 for (let rangeSlider of rangeSliders) {
-    updateSlider(rangeSlider);
-    rangeSlider.addEventListener("input", event => {
-        updateSlider(event.target.parentNode);
-    });
+    updateSlider(rangeSlider)
+    rangeSlider.addEventListener('input', event => {
+        updateSlider(event.target.parentNode)
+    })
 }
 
 function getValue(id) {
