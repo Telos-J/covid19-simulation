@@ -1,2 +1,10 @@
 # Covid19 Vaccination Simulation
 Analyzing the effect of vaccination and herd immunity
+
+![GitHub package.json version](https://img.shields.io/github/package-json/v/Telos-J/covid19-simulation?style=flat-square)
+![License](https://img.shields.io/github/license/Telos-J/covid19-simulation?style=flat-square)
+![Webpack](https://img.shields.io/badge/-Webpack-8DD6F9?style=flat-square&logo=webpack&logoColor=white)
+![JavaScript](https://img.shields.io/badge/-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=white)
+
+
+Find the simulation at [https://telos-j.github.io/covid19-simulation/](https://telos-j.github.io/covid19-simulation/)
