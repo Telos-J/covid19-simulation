@@ -23,7 +23,7 @@ Sliders
 The sliders can be used to change the parameters of the simulation. The slider parameters are described below.
 
 <p align="center">
-<img src="./src/img/sliders.png" width="200">
+<img src="./src/img/sliders.png" width="300">
 </p>
 
 Number of balls
@@ -47,7 +47,7 @@ Toggles
 In addition to the sliders there are toggle buttons that the user may use to change some settings of the simulation.
 
 <p align="center">
-<img src="./src/img/toggles.png" width="200">
+<img src="./src/img/toggles.png" width="300">
 </p>
 
 Stack Graph
