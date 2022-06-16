@@ -1,5 +1,5 @@
 {
-  "name": "covid19-simulation",
+  "name": "covid19-simulering",
   "version": "1.0.0",
   "description": "Covid19 Vaccination Simulation: Analyzing the effect of vaccination and herd immunity",
   "main": "index.js",
@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jiseungjung/covid19-simulation.git"
+    "url": "git+https://github.com/NDLANO/covid19-simulering.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jiseungjung/covid19-simulation/issues"
+    "url": "https://github.com/NDLANO/covid19-simulering/issues"
   },
-  "homepage": "https://github.com/jiseungjung/covid19-simulation#readme",
+  "homepage": "https://github.com/NDLANO/covid19-simulering#readme",
   "devDependencies": {
     "clean-webpack-plugin": "*",
     "css-loader": "^5.2.6",
