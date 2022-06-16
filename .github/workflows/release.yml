@@ -1,0 +1,32 @@
+name: Release
+on:
+  push:
+    branches:
+      - main
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.STATISK_TEST_S3_CLIENT_ID }}
+  AWS_DEFAULT_REGION: 'eu-west-1'
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.STATISK_TEST_S3_CLIENT_SECRET }}
+  COMPONENT: ${{ github.event.repository.name }}
+jobs:
+  release:
+    name: 'Build and push to bucket'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '10'
+      - uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+            .eslintcache
+            ~/.npm
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: 'Install'
+        run: npm install
+      - name: 'Build'
+        run: npm run build
+      - name: 'Release'
+        run: aws s3 cp dist s3://statisk.test.ndla.no/$COMPONENT/ --recursive
